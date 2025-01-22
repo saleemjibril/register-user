@@ -156,7 +156,7 @@ const IDCardGenerator = () => {
         ...userData,
         id: response?.data?.user?._id,
       });
-      const userUrl = `https://user-register.com/${response?.data?.user?._id}`;
+      const userUrl = `https://register-user-one.vercel.app/${response?.data?.user?._id}`;
       const tempQr = await QRCode.toDataURL(userUrl);
 
       const response2 = await updateUser(response?.data?.user?._id, {

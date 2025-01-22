@@ -2,40 +2,40 @@ import axios from "axios";
 
 
   
-export const getAllEvents = async () => {
-  try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/events`, {
-      next: {
-        revalidate: 3600 // Revalidate every hour
-      }
-    });
+export const getUsers = async (
+  
+  ) => {
+  
     
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
+   
+    try {
+      const res = await axios.get(
+        `${process.env.REACT_APP_API_URL}/user`
+      );
+  
+      return res;
+    } catch (error) {
+      console.log("ERROR", error);
+      return error?.response;
     }
-    
-    return res.json();
-  } catch (error) {
-    console.error("ERROR", error);
-    throw error;
-  }
-};
+  };
 
 
-export const getEvent = async (id) => {
+export const getUser = async (
+id
+) => {
+
+  
+ 
   try {
-    const res = await fetch(`${process.env.NEXT_PUBLIC_URL}/events/${id}`, {
-      next: { revalidate: 3600 } // Revalidate every hour
-    });
-    
-    if (!res.ok) {
-      throw new Error(`HTTP error! status: ${res.status}`);
-    }
-    
-    return res.json();
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/user/${id}`
+    );
+
+    return res;
   } catch (error) {
-    console.error("ERROR", error);
-    throw error;
+    console.log("ERROR", error);
+    return error?.response;
   }
 };
 
@@ -48,7 +48,7 @@ export const createUser = async (
  
   try {
     const res = await axios.post(
-      `http://localhost:8000/api/v1/user`, data
+      `${process.env.REACT_APP_API_URL}/user`, data
     );
 
     return res;
@@ -68,7 +68,7 @@ export const updateUser = async (
  
   try {
     const res = await axios.put(
-      `http://localhost:8000/api/v1/user/${id}`, data
+      `${process.env.REACT_APP_API_URL}/user/${id}`, data
     );
 
     return res;

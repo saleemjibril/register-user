@@ -20,7 +20,7 @@ const IDCardDisplay = () => {
     <div className="max-w-3xl mx-auto bg-white p-6 rounded-lg shadow-lg">
       <div className="bg-gray-50 rounded-xl p-8 border-2 border-gray-200">
         <div className="flex items-center justify-between pb-6 mb-6 border-b-2 border-gray-200">
-          <h1 className="text-3xl font-bold text-blue-600">COMPANY NAME</h1>
+          <h1 className="text-3xl font-bold text-blue-600">COMPANY-NAME</h1>
         </div>
 
         <div className="flex gap-8 mb-8">

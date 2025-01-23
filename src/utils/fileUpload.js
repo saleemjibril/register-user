@@ -7,7 +7,8 @@ export default function fileUpload(
   auth
 ) {
 
-  setLoading(true);
+  
+
 
   // let files = e.target.files;
   // let allUploadedFiles = images;
@@ -24,6 +25,8 @@ export default function fileUpload(
   };
 
   if (e) {
+    setLoading(true);
+
     // for (let i = 0; i < files.length; i++) {
     fileToUri(e, (err, result) => {
       if (result) {

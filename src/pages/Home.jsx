@@ -50,6 +50,7 @@ const styles = StyleSheet.create({
     height: 180,
     borderRadius: 8,
     border: "3px solid #dee2e6",
+    objectFit: "cover"
   },
   infoSection: {
     width: "65%",

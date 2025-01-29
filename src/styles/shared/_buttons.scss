@@ -1,0 +1,29 @@
+@mixin button($bg-color, $hover-color) {
+  display: inline-flex;
+  align-items: center;
+  padding: 8px 16px;
+  border: 1px solid transparent;
+  font-size: 14px;
+  font-weight: 500;
+  border-radius: 6px;
+  box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+  color: $color-white;
+  background-color: $bg-color;
+  transition: background-color 0.2s;
+
+  &:hover {
+    background-color: $hover-color;
+  }
+
+  &:focus {
+    outline: none;
+    ring: 2px;
+    ring-offset: 2px;
+    ring-color: $bg-color;
+  }
+
+  &:disabled {
+    background-color: $color-gray-300;
+    cursor: not-allowed;
+  }
+}

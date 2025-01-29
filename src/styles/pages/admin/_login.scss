@@ -1,0 +1,141 @@
+
+
+
+.admin-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: $color-gray-50;
+  padding: 16px;
+
+  &__container {
+    width: 100%;
+    max-width: 400px;
+    background-color: $color-white;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+  }
+
+  &__header {
+    padding: 32px 24px;
+    text-align: center;
+    border-bottom: 1px solid $color-gray-200;
+
+    &-logo {
+      width: 48px;
+      height: 48px;
+      margin: 0 auto 16px;
+      color: $color-primary;
+    }
+
+    &-title {
+      font-size: 24px;
+      font-weight: 700;
+      color: $color-gray-900;
+      margin-bottom: 8px;
+    }
+
+    &-subtitle {
+      font-size: 14px;
+      color: $color-gray-600;
+    }
+  }
+
+  &__form {
+    padding: 24px;
+
+    &-group {
+      margin-bottom: 20px;
+    }
+
+    &-label {
+      display: block;
+      font-size: 14px;
+      font-weight: 500;
+      color: $color-gray-700;
+      margin-bottom: 8px;
+    }
+
+    &-input {
+      width: 100%;
+      padding: 10px 12px;
+      font-size: 14px;
+      border: 1px solid $color-gray-300;
+      border-radius: 6px;
+      background-color: $color-white;
+      transition: all 0.2s;
+
+      &:focus {
+        @include input-focus;
+      }
+
+      &::placeholder {
+        color: $color-gray-600;
+      }
+
+      &--error {
+        border-color: $color-danger;
+        background-color: rgba($color-danger, 0.05);
+      }
+    }
+
+    &-error {
+      color: $color-danger;
+      font-size: 12px;
+      margin-top: 4px;
+    }
+
+    &-forgot {
+      display: block;
+      text-align: right;
+      font-size: 14px;
+      color: $color-primary;
+      text-decoration: none;
+      margin-bottom: 24px;
+
+      &:hover {
+        text-decoration: underline;
+      }
+    }
+
+    &-submit {
+      width: 100%;
+      padding: 12px;
+      background-color: $color-primary;
+      color: $color-white;
+      font-size: 16px;
+      font-weight: 500;
+      border: none;
+      border-radius: 6px;
+      cursor: pointer;
+      transition: background-color 0.2s;
+
+      &:hover {
+        background-color: $color-primary-dark;
+      }
+
+      &:disabled {
+        background-color: $color-gray-300;
+        cursor: not-allowed;
+      }
+    }
+  }
+
+  &__alert {
+    margin: 0 24px 16px;
+    padding: 12px;
+    border-radius: 6px;
+    font-size: 14px;
+
+    &--error {
+      background-color: rgba($color-danger, 0.1);
+      color: $color-danger;
+    }
+
+    &--success {
+      background-color: rgba($color-success, 0.1);
+      color: $color-success;
+    }
+  }
+}

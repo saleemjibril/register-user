@@ -7,6 +7,8 @@ export default function fileUpload(
   auth
 ) {
 
+  console.log('started image upoload');
+  
   
 
 
@@ -44,7 +46,8 @@ export default function fileUpload(
             }
           )
           .then((response) => {
-            
+            console.log('response from image upload', response);
+
               setListItem(response?.data?.url);
             
             // setPoemMedia(response?.data);

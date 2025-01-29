@@ -1,0 +1,6 @@
+// Mixins
+@mixin input-focus {
+  outline: none;
+  border-color: $color-primary;
+  box-shadow: 0 0 0 2px rgba($color-primary, 0.1);
+}

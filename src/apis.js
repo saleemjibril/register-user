@@ -1,35 +1,31 @@
 import axios from "axios";
 
+export const getUsers = async () => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user`);
 
-  
-export const getUsers = async (
-  
-  ) => {
-  
-    
-   
-    try {
-      const res = await axios.get(
-        `${process.env.REACT_APP_API_URL}/user`
-      );
-  
-      return res;
-    } catch (error) {
-      console.log("ERROR", error);
-      return error?.response;
-    }
-  };
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
 
+export const getUser = async (id) => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/${id}`);
 
-export const getUser = async (
-id
-) => {
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
 
-  
- 
+export const searchUser = async (searchTerm) => {
   try {
     const res = await axios.get(
-      `${process.env.REACT_APP_API_URL}/user/${id}`
+      `${process.env.REACT_APP_API_URL}/user/search?searchTerm=${searchTerm}`
     );
 
     return res;
@@ -39,17 +35,11 @@ id
   }
 };
 
-export const createUser = async (
-  data,
-) => {
+export const createUser = async (data) => {
+  console.log("skepta", data);
 
-  console.log('skepta', data);
-  
- 
   try {
-    const res = await axios.post(
-      `${process.env.REACT_APP_API_URL}/user`, data
-    );
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user`, data);
 
     return res;
   } catch (error) {
@@ -58,17 +48,13 @@ export const createUser = async (
   }
 };
 
-export const updateUser = async (
-  id,
-  data,
-) => {
+export const updateUser = async (id, data) => {
+  console.log("skepta", data);
 
-  console.log('skepta', data);
-  
- 
   try {
     const res = await axios.put(
-      `${process.env.REACT_APP_API_URL}/user/${id}`, data
+      `${process.env.REACT_APP_API_URL}/user/${id}`,
+      data
     );
 
     return res;
@@ -78,11 +64,7 @@ export const updateUser = async (
   }
 };
 
-
-export const deleteEvent = async (
-  token,
-  id,
-) => {
+export const deleteEvent = async (token, id) => {
   const config = {
     headers: {
       Authorization: `Bearer ${token}`,
@@ -91,7 +73,7 @@ export const deleteEvent = async (
   try {
     const res = await axios.delete(
       `${process.env.NEXT_PUBLIC_URL}/events/${id}`,
-    config
+      config
     );
 
     return res;
@@ -100,4 +82,3 @@ export const deleteEvent = async (
     return error?.response;
   }
 };
-

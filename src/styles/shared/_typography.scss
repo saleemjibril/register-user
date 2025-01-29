@@ -1,0 +1,78 @@
+%title-60 {
+  font-size: 6rem;
+  font-weight: 800;
+  color: #fff;
+  font-family: var(--font-ojuju);
+  line-height: 72px;
+
+  @media (max-width: 565px) {
+    font-size: 36px;
+    line-height: 48px;
+  }
+}
+%title-48 {
+  font-size: 48px;
+  font-weight: 700;
+  font-family: var(--font-ojuju);
+  @media (max-width: 565px) {
+    font-size: 32px;
+  }
+}
+%title-40 {
+  font-size: 40px;
+  font-weight: 700;
+  color: rgba(36, 35, 35, 1);
+}
+
+%title-36 {
+  font-size: 36px;
+  font-weight: 700;
+  font-family: var(--font-ojuju);
+
+  @media (max-width: 565px) {
+    font-size: 24px;
+  }
+}
+%title-32 {
+  font-size: 32px;
+  font-weight: 700;
+  color: rgba(36, 35, 35, 1);
+}
+
+%title-24 {
+  font-size: 24px;
+  font-weight: 700;
+  color: rgba(36, 35, 35, 1);
+}
+%title-20 {
+  font-size: 20px;
+  font-weight: 400;
+  color: #fff;
+
+  @media (max-width: 565px) {
+    font-size: 16px;
+  }
+}
+
+%title-18 {
+  font-size: 18px;
+  font-weight: 400;
+  line-height: 28px;
+
+  @media (max-width: 565px) {
+    font-size: 16px;
+  }
+}
+%title-16 {
+  font-size: 16px;
+  font-weight: 500;
+}
+
+%title-14 {
+  font-size: 14px;
+  font-weight: 400;
+}
+%title-12 {
+  font-size: 12px;
+  font-weight: 400;
+}

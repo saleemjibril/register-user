@@ -1,5 +1,4 @@
 import { useEffect, useRef, useState } from "react";
-import { Badge } from "@mui/material";
 import { pdf } from "@react-pdf/renderer";
 import moment from "moment";
 import QRCode from "qrcode";
@@ -9,7 +8,7 @@ import IDCard from "../../components/IDCard";
 import fileUpload from "../../utils/fileUpload";
 import AdminLayout from "./Layout";
 
-const PhotoUpdate = () => {
+const User = () => {
   const pathname = useParams();
 
   const [image, setImage] = useState("");
@@ -20,75 +19,17 @@ const PhotoUpdate = () => {
   const mediaRef = useRef(null);
 
   const handleGetUser = async () => {
+    setLoading(true);
     const response = await getUser(pathname?.id);
     setImage(response?.data?.photo);
     setUser(response?.data);
+    setQrCodeUrl(response?.data?.qrCodeUrl);
+    setLoading(false);
   };
 
   useEffect(() => {
     handleGetUser();
   }, []);
-
-  const handlePhotoSubmit = async () => {
-    setLoading(true);
-    try {
-      const userUrl = `https://register-user-one.vercel.app/user/${user?._id}`;
-      const tempQr = await QRCode.toDataURL(userUrl);
-
-      const response = await updateUser(user?._id, {
-        photo: image,
-        qrCodeUrl: tempQr,
-      });
-
-      console.log("updateUser", response);
-
-      if (response?.status === 200) {
-        setQrCodeUrl(tempQr);
-      } else {
-        alert("image upload failed");
-      }
-    } catch (error) {
-      console.error("Error updating photo:", error);
-      alert("Error uploading photo");
-      return { success: false };
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  const generatePdfBlob = async () => {
-    const doc = <IDCard userData={user} image={image} qrCodeUrl={qrCodeUrl} />;
-    const asPdf = pdf([]);
-    asPdf.updateContainer(doc);
-    const blob = await asPdf.toBlob();
-    return blob;
-  };
-
-  const handlePdf = async () => {
-    try {
-      const blob = await generatePdfBlob();
-
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${user?.names}${moment(Date.now()).format(
-        "DD-MM-YYYY"
-      )}_id_card.pdf`;
-      link.click();
-
-      const file = new File([blob], link.download, { type: "application/pdf" });
-
-      setImage("");
-      setQrCodeUrl("");
-      setUser("");
-    } catch (error) {
-      alert("Unable to download ID card");
-      console.log("error creating certificate:", error);
-      return {
-        status: "error creating certificate",
-        statusCode: 500,
-      };
-    }
-  };
 
   return (
     <AdminLayout>
@@ -106,72 +47,83 @@ const PhotoUpdate = () => {
               <div className="id-generator__photo">
                 <div className="id-generator__photo-preview">
                   <div className="id-generator__photo-preview-container">
-                    {image && (
-                      <Badge
-                        overlap="circular"
-                        onClick={() => setImage("")}
-                        anchorOrigin={{ vertical: "top", horizontal: "right" }}
-                        badgeContent={
-                          <div className="id-generator__photo-remove">
-                            <svg
-                              width="24"
-                              height="24"
-                              viewBox="0 0 24 24"
-                              fill="none"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                d="M21.12 6.98L17.02 2.88C16.54 2.4 15.58 2 14.9 2H9.1C8.42 2 7.46 2.4 6.98 2.88L2.88 6.98C2.4 7.46 2 8.42 2 9.1V14.9C2 15.58 2.4 16.54 2.88 17.02L6.98 21.12C7.46 21.6 8.42 22 9.1 22H14.9C15.58 22 16.54 21.6 17.02 21.12L21.12 17.02C21.6 16.54 22 15.58 22 14.9V9.1C22 8.42 21.6 7.46 21.12 6.98ZM16.03 14.97C16.32 15.26 16.32 15.74 16.03 16.03C15.88 16.18 15.69 16.25 15.5 16.25C15.31 16.25 15.12 16.18 14.97 16.03L12 13.06L9.03 16.03C8.88 16.18 8.69 16.25 8.5 16.25C8.31 16.25 8.12 16.18 7.97 16.03C7.68 15.74 7.68 15.26 7.97 14.97L10.94 12L7.97 9.03C7.68 8.74 7.68 8.26 7.97 7.97C8.26 7.68 8.74 7.68 9.03 7.97L12 10.94L14.97 7.97C15.26 7.68 15.74 7.68 16.03 7.97C16.32 8.26 16.32 8.74 16.03 9.03L13.06 12L16.03 14.97Z"
-                                fill="red"
-                              />
-                            </svg>
-                          </div>
-                        }
-                      >
-                        <div className="id-generator__photo-preview">
-                          <div className="id-generator__photo-preview-container">
-                            <img
-                              src={image}
-                              alt=""
-                              className="id-generator__photo-preview-image"
-                            />
-                          </div>
-                          {imageLoading && (
-                            <div className="id-generator__photo-preview-loading">
-                              <div className="id-generator__photo-preview-loading-spinner" />
-                            </div>
-                          )}
+                    {/* {image && ( */}
+
+                    <div className="id-generator__photo-preview">
+                      <div className="id-generator__photo-preview-container">
+                        {!image && !loading && <div>User has no image</div>}
+                        <img
+                          src={image}
+                          alt=""
+                          className="id-generator__photo-preview-image"
+                        />
+                      </div>
+                      {imageLoading && (
+                        <div className="id-generator__photo-preview-loading">
+                          <div className="id-generator__photo-preview-loading-spinner" />
                         </div>
-                      </Badge>
-                    )}
+                      )}
+                    </div>
+                    {/* )} */}
                   </div>
                 </div>
+              </div>
 
-                <label className="id-generator__photo-upload">
-                  <input
-                    type="file"
-                    accept="image/*"
-                    hidden
-                    onChange={(e) =>
-                      fileUpload(e?.target?.files[0], setImage, setImageLoading)
-                    }
-                    ref={mediaRef}
-                  />
-                  {!image && (
-                    <div
-                      className={`id-generator__photo-button ${
-                        imageLoading
-                          ? "id-generator__photo-button--loading"
-                          : ""
-                      }`}
-                    >
-                      {imageLoading ? "Uploading..." : "Upload Photo"}
+              <div className="fingerprint-grid">
+                <div className="id-generator__photo">
+                  <div className="id-generator__photo-preview">
+                    <div className="id-generator__photo-preview-container">
+                      {!user?.leftFingerPrint && !loading && (
+                        <div>No left finger print</div>
+                      )}
+
+                      <div className="id-generator__photo-preview">
+                        <div className="id-generator__photo-preview-container">
+                          <img
+                            src={user?.leftFingerPrint}
+                            alt=""
+                            className="id-generator__photo-preview-image"
+                          />
+                        </div>
+                        {imageLoading && (
+                          <div className="id-generator__photo-preview-loading">
+                            <div className="id-generator__photo-preview-loading-spinner" />
+                          </div>
+                        )}
+                      </div>
                     </div>
-                  )}
-                </label>
+                  </div>
+                </div>
+                <div className="id-generator__photo">
+                  <div className="id-generator__photo-preview">
+                    <div className="id-generator__photo-preview-container">
+                      <div className="id-generator__photo-preview">
+                        <div className="id-generator__photo-preview-container">
+                          {!user?.rightFingerPrint && !loading && (
+                            <div>No right finger print</div>
+                          )}
+                          <img
+                            src={user?.rightFingerPrint}
+                            alt=""
+                            className="id-generator__photo-preview-image"
+                          />
+                        </div>
+                        {imageLoading && (
+                          <div className="id-generator__photo-preview-loading">
+                            <div className="id-generator__photo-preview-loading-spinner" />
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="id-generator__form-grid">
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">User Id</label>
+                  <div className="id-generator__form-value">{user?.userId}</div>
+                </div>
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">Full Name</label>
                   <div className="id-generator__form-value">{user?.names}</div>
@@ -337,26 +289,6 @@ const PhotoUpdate = () => {
           )}
 
           <div className="id-generator__actions">
-            {image && !qrCodeUrl && (
-              <button
-                onClick={handlePhotoSubmit}
-                className="id-generator__actions-register"
-                disabled={loading || imageLoading}
-              >
-                {loading ? "Submitting..." : "Submit Photo"}
-              </button>
-            )}
-
-            {image && qrCodeUrl && (
-              <button
-                className="id-generator__actions-download"
-                disabled={loading}
-                onClick={() => handlePdf(image, qrCodeUrl)}
-              >
-                {loading ? "Generating PDF..." : "Download PDF"}
-              </button>
-            )}
-
             <Link
               className="id-generator__actions-download"
               disabled={loading}
@@ -371,4 +303,4 @@ const PhotoUpdate = () => {
   );
 };
 
-export default PhotoUpdate;
+export default User;

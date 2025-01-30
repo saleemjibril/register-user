@@ -1,8 +1,13 @@
 import axios from "axios";
 
-export const getUsers = async () => {
+export const getUsers = async ({ term, type, page = 1 } = {}) => {
   try {
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user`);
+    let queryString = `?page=${page}`;
+    if (term && type) {
+      queryString += `&searchTerm=${encodeURIComponent(term)}&searchType=${encodeURIComponent(type)}`;
+    }
+
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user${queryString}`);
 
     return res;
   } catch (error) {

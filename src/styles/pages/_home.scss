@@ -127,7 +127,7 @@
 
     &-group {
 
-      margin-bottom: 0; // Override the previous margin
+      margin-bottom: 0;
 
       &--full {
         grid-column: 1 / -1;
@@ -142,7 +142,7 @@
 
     &__container {
       @media (min-width: 768px) {
-        max-width: 900px; // Increased from 672px to accommodate the grid
+        max-width: 900px;
       }
   
       @media (min-width: 1024px) {

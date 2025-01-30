@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import { getUser, updateUser } from "../../apis";
+import AdminLayout from "./Layout";
 
 const UpdateNameRegistration = () => {
   const pathname = useParams();
@@ -12,16 +13,23 @@ const UpdateNameRegistration = () => {
 
   const [formData, setFormData] = useState({
     names: "",
+    email: "",
     community: "",
+    limited: "",
     district: "",
     lga: "",
     state: "",
     phoneNumber: "",
     age: "",
     sex: "",
+    degreeQualifications: "",
+    helperColumnMale: "",
+    helperColumnFemale: "",
     languagesSpokenAndWritten: "",
     disability: "no",
     religion: "",
+    helperColumnChristianity: "",
+    helperColumnIslam: "",
     birthCertificateCheck: "no",
     idType: "",
     idNumber: "",
@@ -30,28 +38,42 @@ const UpdateNameRegistration = () => {
     availability: "",
     preExistingHealthCondition: "",
     nursingMother: "no",
-    remark: ""
+    remark: "",
   });
 
-  
-    const handleGetUser = async () => {
-      const response = await getUser(pathname?.id);
-      setFormData(response?.data)
-    };
-  
-      useEffect(() => {
-        handleGetUser();
-      }, []);
+  const handleGetUser = async () => {
+    const response = await getUser(pathname?.id);
+    setFormData(response?.data);
+  };
+
+  useEffect(() => {
+    handleGetUser();
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
+
+    if (name === "sex") {
+      setFormData((prev) => ({
+        ...prev,
+        helperColumnMale: value === "male" ? "yes" : "no",
+        helperColumnFemale: value === "female" ? "yes" : "no",
+      }));
+    }
+
+    if (name === "religion") {
+      setFormData((prev) => ({
+        ...prev,
+        helperColumnChristianity:
+          value.toLowerCase() === "christianity" ? "yes" : "no",
+        helperColumnIslam: value.toLowerCase() === "islam" ? "yes" : "no",
+      }));
+    }
   };
-
-
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -60,324 +82,375 @@ const UpdateNameRegistration = () => {
       const response = await updateUser(formData?._id, formData);
       if (response?.status === 200) {
         alert("Trainee data updated successfully");
-        navigate("/user/image")
       } else {
-        alert("Trainee data update failed");
+        if (response?.data?.message) {
+          alert(response?.data?.message);
+        } else {
+          alert("Error updating trainee info");
+        }
       }
     } catch (error) {
-      console.error("Error registering trainee:", error);
-      alert("Error registering trainee");
+      console.error("Error updating trainee info:", error);
+      alert("Error updating trainee info");
     } finally {
       setLoading(false);
     }
   };
 
- 
-
   return (
-    <div className="id-generator">
-      <div className="id-generator__container">
-        <div className="id-generator__header">
-          <h2 className="id-generator__header-title">Update Trainee</h2>
-          <p className="id-generator__header-subtitle">
-            Update trainee's information below
-          </p>
+    <AdminLayout>
+      <div className="id-generator">
+        <div className="id-generator__container">
+          <div className="id-generator__header">
+            <h2 className="id-generator__header-title">Update Trainee</h2>
+            <p className="id-generator__header-subtitle">
+              Update trainee's information below
+            </p>
+          </div>
+
+          <br />
+          <br />
+
+          <form onSubmit={handleSubmit} className="id-generator__form">
+            <div className="id-generator__form-grid">
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Full Name</label>
+                <input
+                  type="text"
+                  name="names"
+                  placeholder="Enter full name"
+                  value={formData.names}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Email</label>
+                <input
+                  type="email"
+                  name="email"
+                  placeholder="Enter email"
+                  value={formData.email}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Community</label>
+                <input
+                  type="text"
+                  name="community"
+                  placeholder="Enter community"
+                  value={formData.community}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Limited</label>
+                <input
+                  type="text"
+                  name="limited"
+                  placeholder="Enter limited"
+                  value={formData.limited}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">District</label>
+                <input
+                  type="text"
+                  name="district"
+                  placeholder="Enter district"
+                  value={formData.district}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">LGA</label>
+                <input
+                  type="text"
+                  name="lga"
+                  placeholder="Enter Local Government Area"
+                  value={formData.lga}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">State</label>
+                <input
+                  type="text"
+                  name="state"
+                  placeholder="Enter state"
+                  value={formData.state}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Phone Number</label>
+                <input
+                  type="tel"
+                  name="phoneNumber"
+                  placeholder="Enter phone number"
+                  value={formData.phoneNumber}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Age</label>
+                <input
+                  type="text"
+                  name="age"
+                  placeholder="Enter age"
+                  value={formData.age}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Sex</label>
+                <select
+                  name="sex"
+                  value={formData.sex}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                >
+                  <option value="">Select gender</option>
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">
+                  Degree Qualifications
+                </label>
+                <input
+                  type="text"
+                  name="degreeQualifications"
+                  placeholder="Enter degree qualifications"
+                  value={formData.degreeQualifications}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Languages</label>
+                <input
+                  type="text"
+                  name="languagesSpokenAndWritten"
+                  placeholder="Enter languages spoken and written"
+                  value={formData.languagesSpokenAndWritten}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Disability</label>
+                <select
+                  name="disability"
+                  value={formData.disability}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                >
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Religion</label>
+                <select
+                  name="religion"
+                  value={formData.religion}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                >
+                  <option value="">Select religion</option>
+                  <option value="christianity">Christianity</option>
+                  <option value="islam">Islam</option>
+                  <option value="other">Other</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">
+                  Birth Certificate
+                </label>
+                <select
+                  name="birthCertificateCheck"
+                  value={formData.birthCertificateCheck}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                >
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">ID Type</label>
+                <select
+                  name="idType"
+                  value={formData.idType}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                >
+                  <option value="">Select ID type</option>
+                  <option value="nin">NIN</option>
+                  <option value="voters">Voters Card</option>
+                  <option value="drivers">Drivers License</option>
+                  <option value="passport">International Passport</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">ID Number</label>
+                <input
+                  type="text"
+                  name="idNumber"
+                  placeholder="Enter ID number"
+                  value={formData.idNumber}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">
+                  Qualification
+                </label>
+                <input
+                  type="text"
+                  name="qualification"
+                  placeholder="Enter qualification"
+                  value={formData.qualification}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                />
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">
+                  Physical Fitness
+                </label>
+                <select
+                  name="physicalFitness"
+                  value={formData.physicalFitness}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                >
+                  <option value="">Select physical fitness status</option>
+                  <option value="excellent">Excellent</option>
+                  <option value="good">Good</option>
+                  <option value="fair">Fair</option>
+                  <option value="poor">Poor</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Availability</label>
+                <select
+                  name="availability"
+                  value={formData.availability}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                >
+                  <option value="">Select availability</option>
+                  <option value="full-time">Full Time</option>
+                  <option value="part-time">Part Time</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">
+                  Pre-existing Health Condition
+                </label>
+                <select
+                  name="preExistingHealthCondition"
+                  value={formData.preExistingHealthCondition}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                >
+                  <option value="">Select option</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">
+                  Nursing Mother
+                </label>
+                <select
+                  name="nursingMother"
+                  value={formData.nursingMother}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                >
+                  <option value="no">No</option>
+                  <option value="yes">Yes</option>
+                </select>
+              </div>
+
+              <div className="id-generator__form-group id-generator__form-group--full">
+                <label className="id-generator__form-label">Remark</label>
+                <textarea
+                  name="remark"
+                  placeholder="Enter any additional remarks"
+                  value={formData.remark}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  rows="3"
+                />
+              </div>
+            </div>
+
+            <div className="id-generator__actions">
+              <button
+                type="submit"
+                className="id-generator__actions-register"
+                disabled={loading}
+              >
+                {loading ? "Updating..." : "Update Trainee Info"}
+              </button>
+            </div>
+          </form>
         </div>
-
-        
-
-        <br />
-        <br />
-
-        <form onSubmit={handleSubmit} className="id-generator__form">
-          <div className="id-generator__form-grid">
-            {/* Personal Information */}
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Full Name</label>
-              <input
-                type="text"
-                name="names"
-                placeholder="Enter full name"
-                value={formData.names}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Community</label>
-              <input
-                type="text"
-                name="community"
-                placeholder="Enter community"
-                value={formData.community}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">District</label>
-              <input
-                type="text"
-                name="district"
-                placeholder="Enter district"
-                value={formData.district}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">LGA</label>
-              <input
-                type="text"
-                name="lga"
-                placeholder="Enter Local Government Area"
-                value={formData.lga}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">State</label>
-              <input
-                type="text"
-                name="state"
-                placeholder="Enter state"
-                value={formData.state}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Phone Number</label>
-              <input
-                type="number"
-                name="phoneNumber"
-                placeholder="Enter phone number"
-                value={formData.phoneNumber}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Age</label>
-              <input
-                type="number"
-                name="age"
-                placeholder="Enter age"
-                value={formData.age}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Sex</label>
-              <select
-                name="sex"
-                value={formData.sex}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              >
-                <option value="">Select gender</option>
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Languages</label>
-              <input
-                type="text"
-                name="languagesSpokenAndWritten"
-                placeholder="Enter languages"
-                value={formData.languagesSpokenAndWritten}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Disability</label>
-              <select
-                name="disability"
-                value={formData.disability}
-                onChange={handleChange}
-                className="id-generator__form-input"
-              >
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Religion</label>
-              <input
-                type="text"
-                name="religion"
-                placeholder="Enter religion"
-                value={formData.religion}
-                onChange={handleChange}
-                className="id-generator__form-input"
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Birth Certificate</label>
-              <select
-                name="birthCertificateCheck"
-                value={formData.birthCertificateCheck}
-                onChange={handleChange}
-                className="id-generator__form-input"
-              >
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">ID Type</label>
-              <select
-                name="idType"
-                value={formData.idType}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              >
-                <option value="">Select ID type</option>
-                <option value="nin">NIN</option>
-                <option value="voters">Voters Card</option>
-                <option value="drivers">Drivers License</option>
-                <option value="passport">International Passport</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">ID Number</label>
-              <input
-                type="number"
-                name="idNumber"
-                placeholder="Enter ID number"
-                value={formData.idNumber}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Qualification</label>
-              <input
-                type="text"
-                name="qualification"
-                placeholder="Enter qualification"
-                value={formData.qualification}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              />
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Physical Fitness</label>
-              <select
-                name="physicalFitness"
-                value={formData.physicalFitness}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              >
-                <option value="">Select physical fitness status</option>
-                <option value="excellent">Excellent</option>
-                <option value="good">Good</option>
-                <option value="fair">Fair</option>
-                <option value="poor">Poor</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Availability</label>
-              <select
-                name="availability"
-                value={formData.availability}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              >
-                <option value="">Select availability</option>
-                <option value="full-time">Full Time</option>
-                <option value="part-time">Part Time</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Health Condition</label>
-              <select
-                name="preExistingHealthCondition"
-                value={formData.preExistingHealthCondition}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                required
-              >
-                <option value="">Select option</option>
-                <option value="yes">Yes</option>
-                <option value="no">No</option>
-              </select>
-            </div>
-
-            <div className="id-generator__form-group">
-              <label className="id-generator__form-label">Nursing Mother</label>
-              <select
-                name="nursingMother"
-                value={formData.nursingMother}
-                onChange={handleChange}
-                className="id-generator__form-input"
-              >
-                <option value="no">No</option>
-                <option value="yes">Yes</option>
-              </select>
-            </div>
-
-            {/* Full width remark field */}
-            <div className="id-generator__form-group id-generator__form-group--full">
-              <label className="id-generator__form-label">Remark</label>
-              <textarea
-                name="remark"
-                placeholder="Enter any additional remarks"
-                value={formData.remark}
-                onChange={handleChange}
-                className="id-generator__form-input"
-                rows="3"
-              />
-            </div>
-          </div>
-
-          <div className="id-generator__actions">
-            <button
-              type="submit"
-              className="id-generator__actions-register"
-              disabled={loading}
-            >
-              {loading ? "Updating..." : "Update Trainee Details"}
-            </button>
-          </div>
-        </form>
       </div>
-    </div>
+    </AdminLayout>
   );
 };
 

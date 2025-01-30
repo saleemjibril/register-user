@@ -36,7 +36,6 @@ const AdminLogin = () => {
       ...prev,
       [name]: value
     }));
-    // Clear error when user starts typing
     if (errors[name]) {
       setErrors(prev => ({
         ...prev,
@@ -54,7 +53,6 @@ const AdminLogin = () => {
       setLoading(true);
       setAlert({ type: '', message: '' });
 
-      // Replace with your actual login API call
       const response = await loginAdmin(formData);
       
       if (response.success) {
@@ -62,9 +60,7 @@ const AdminLogin = () => {
           type: 'success',
           message: 'Login successful! Redirecting...'
         });
-        // Add token to localStorage or your auth management system
         localStorage.setItem('adminToken', response.token);
-        // Redirect to admin dashboard
         setTimeout(() => navigate('/admin/dashboard'), 1500);
       }
     } catch (error) {
@@ -156,9 +152,7 @@ const AdminLogin = () => {
 
 export default AdminLogin;
 
-// Mock login function - replace with your actual API call
 const loginAdmin = async (credentials) => {
-  // Simulate API call
   return new Promise((resolve, reject) => {
     setTimeout(() => {
       if (credentials.email === 'admin@company.com' && credentials.password === 'password123') {

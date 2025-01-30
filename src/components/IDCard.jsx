@@ -106,7 +106,7 @@ const IDCard = ({ userData, image, qrCodeUrl }) => (
             <Text style={styles.value}>{userData.names}</Text>
 
             <Text style={styles.label}>ID NUMBER</Text>
-            <Text style={styles.value}>{userData._id}</Text>
+            <Text style={styles.value}>{userData.userId}</Text>
 
             <Text style={styles.label}>ISSUED DATE</Text>
             <Text style={styles.value}>{new Date().toLocaleDateString()}</Text>

@@ -1,6 +1,6 @@
 import axios from "axios";
 
-export default function fileUpload(
+export default async function fileUpload(
   e,
   setListItem,
   setLoading,
@@ -52,6 +52,7 @@ export default function fileUpload(
             
             // setPoemMedia(response?.data);
             setLoading(false);
+            return response?.data?.url;
           })
           .catch((error) => {
             setLoading(false);

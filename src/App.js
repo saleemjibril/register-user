@@ -15,6 +15,10 @@ import PhotoUploadForm from "./pages/PhotoUpload";
 import SearchAndUpdateNameRegistration from "./pages/SearchAndUpdateNameRegistration";
 import UpdateNameRegistration from "./pages/admin/UpdateNameRegistration";
 import PhotoUpdate from "./pages/admin/PhotoUpdate";
+import User from "./pages/admin/User";
+import Finger from "./pages/Finger";
+import FingerPrintUpdate from "./pages/admin/FingerPrintUpdate";
+import AdminOutlet from "./pages/admin/Outlet";
 
 
 
@@ -45,14 +49,25 @@ function App() {
         <Route path="/admin/users/image/:id" 
         element={<PhotoUpdate />}
          />
-        <Route path="/admin/users/:id" 
+       <Route path="/admin" element={<AdminOutlet />}>
+        <Route path="users/fingerprint/:id" element={<FingerPrintUpdate />} />
+      </Route>
+
+      <Route path="/admin/users/:id" 
         element={<UpdateNameRegistration />}
          />
-        {/* <Route path="/finger" 
-        element={<FingerprintScanner />}
-         /> */}
-        <Route path="/user/image" 
+      
+        <Route path="/admin/view-user/:id" 
+        element={<User />}
+         />
+        <Route path="/finger" 
+        element={<Finger />}
+         />
+        <Route path="/update-image" 
         element={<PhotoUploadForm />}
+         />
+        <Route path="/update-finger-print" 
+        element={<Finger />}
          />
        
       </Routes>

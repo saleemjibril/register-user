@@ -153,6 +153,20 @@ const SearchAndUpdateNameRegistration = () => {
 
           <form onSubmit={handleSubmit} className="id-generator__form">
             <div className="id-generator__form-grid">
+
+            <div className="id-generator__form-group">
+                <label className="id-generator__form-label">User ID</label>
+                <input
+                  type="text"
+                  name="names"
+                  value={formData.userId}
+                  // onChange={handleChange}
+                  disabled
+                  className="id-generator__form-input"
+                  required
+                />
+              </div>
+
               <div className="id-generator__form-group">
                 <label className="id-generator__form-label">Full Name</label>
                 <input
@@ -165,6 +179,7 @@ const SearchAndUpdateNameRegistration = () => {
                   required
                 />
               </div>
+             
 
               <div className="id-generator__form-group">
                 <label className="id-generator__form-label">Email</label>

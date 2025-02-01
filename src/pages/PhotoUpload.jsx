@@ -103,7 +103,7 @@ const PhotoUploadForm = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Enter email or phone number"
+                placeholder="Enter user id, email or phone number"
                 className="id-generator__form-input"
                 disabled={searchLoading}
                 required
@@ -119,7 +119,8 @@ const PhotoUploadForm = () => {
               </button>
             </form>
           </div>
-
+<br />
+<br />
           {user && (
             <div className="id-generator__content">
               <div className="id-generator__photo">

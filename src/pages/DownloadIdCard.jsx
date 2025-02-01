@@ -54,10 +54,7 @@ const DownloadIdCard = () => {
       setSearchLoading(true);
       try {
         const response = await searchUser(searchTerm);
-        console.log("searchUser", response);
         if (response?.status === 200) {
-          console.log("response.data?.photo", response.data?.photo);
-  
           setUser(response.data);
         } else {
           if (response?.data?.message) {

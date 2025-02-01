@@ -124,9 +124,7 @@ const SearchAndUpdateNameRegistration = () => {
     setSearchLoading(true);
     try {
       const response = await searchUser(searchTerm);
-      console.log("searchUser", response);
       if (response?.status === 200) {
-        console.log("response.data?.photo", response.data?.photo);
 
         setFormData(response.data);
       } else {

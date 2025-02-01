@@ -47,8 +47,6 @@ const FingerprintScannerComponent = ({ setSearchTerm, user, setUser }) => {
 
   const populateReaders = useCallback(async () => {
     if (!sdk) {
-      console.log("no sdk", sdk);
-
       return;
     }
 
@@ -67,8 +65,6 @@ const FingerprintScannerComponent = ({ setSearchTerm, user, setUser }) => {
   }, [sdk]);
 
   const startCapture = async () => {
-    console.log("selectedFinger", selectedFinger);
-
     if (!sdk || acquisitionStarted || !selectedReader || !selectedFinger) {
       if (!selectedFinger) {
         setStatus("Please select a finger before starting scan");
@@ -116,7 +112,6 @@ const FingerprintScannerComponent = ({ setSearchTerm, user, setUser }) => {
         rightFingerPrint: rightThumb,
       });
 
-      console.log("updateUser", response);
 
       //   const leftThumbUpload = await fileUpload(
       //     dataURLtoFile(leftThumb, 'left-thumb.png'),

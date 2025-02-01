@@ -17,7 +17,6 @@ const FingerprintScanner = () => {
     try {
       // Assuming searchUser API accepts email or phone and returns user data
       const response = await searchUser(searchTerm);
-      console.log("searchUser", response);
       if (response?.status === 200) {
         //   console.log("response?.data?.leftFingerPrint", response?.data?.leftFingerPrint);
 

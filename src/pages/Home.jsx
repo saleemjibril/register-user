@@ -161,8 +161,6 @@ const IDCardGenerator = () => {
         qrCodeUrl: tempQr,
       });
 
-      console.log("response2", response2);
-
       if (response2?.status === 200) {
         setQrCodeUrl(tempQr);
       }

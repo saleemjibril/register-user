@@ -7,9 +7,6 @@ export default async function fileUpload(
   auth
 ) {
 
-  console.log('started image upoload', e);
-  
-  
 
 
   // let files = e.target.files;
@@ -46,8 +43,6 @@ export default async function fileUpload(
             }
           )
           .then((response) => {
-            console.log('response from image upload', response);
-
               setListItem(response?.data?.url);
             
             // setPoemMedia(response?.data);

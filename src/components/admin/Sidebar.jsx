@@ -4,7 +4,6 @@ import { Link, useLocation } from "react-router-dom";
 
 const Sidebar = () => {
   const { pathname } = useLocation();
-  console.log("pathname", pathname);
 
   return (
     <aside className="sidebar">

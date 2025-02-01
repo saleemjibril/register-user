@@ -20,9 +20,7 @@ const PhotoUploadForm = () => {
   const [fileName, setFileName] = useState("");
   const mediaRef = useRef(null);
 
-  useEffect(() => {
-    console.log("image", image);
-  }, [image]);
+
 
   const handleSearch = async (e) => {
     e.preventDefault();
@@ -31,9 +29,8 @@ const PhotoUploadForm = () => {
     setSearchLoading(true);
     try {
       const response = await searchUser(searchTerm);
-      console.log("searchUser", response);
       if (response?.status === 200) {
-        console.log("response.data?.photo", response.data?.photo);
+        
 
         setUser(response?.data);
         setFileName(response?.data?.credentials?.name);
@@ -68,7 +65,6 @@ const PhotoUploadForm = () => {
         }
       });
 
-      console.log("updateUser", response);
 
       if (response?.status === 200) {
         alert("Details updated successfully")

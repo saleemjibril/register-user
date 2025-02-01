@@ -21,7 +21,6 @@ const AdminUsersList = () => {
 
   const handleGetUser = async (page = 1) => {
     const response = await getUsers({ page });
-    console.log("getUsers", response);
     
     setUsers(response?.data?.users);
     setPagination(response?.data?.pagination);

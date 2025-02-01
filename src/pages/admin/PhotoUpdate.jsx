@@ -40,8 +40,6 @@ const PhotoUpdate = () => {
         qrCodeUrl: tempQr,
       });
 
-      console.log("updateUser", response);
-
       if (response?.status === 200) {
         setQrCodeUrl(tempQr);
       } else {

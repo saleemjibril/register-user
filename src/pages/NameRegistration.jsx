@@ -66,7 +66,6 @@ const NameRegistrationForm = () => {
     setLoading(true);
     try {
       const response = await createUser(formData);
-      console.log("createUser", response);
 
       if (response?.data?.user?._id) {
         alert("User created successfully");

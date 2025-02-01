@@ -8,17 +8,13 @@ const FingerPrintUpdate = () => {
   const params = useParams();
   const location = useLocation();
   
-  console.log('Current pathname:', location.pathname);
-  console.log('Params:', params);
-  console.log('ID from params:', params.id);
+
 
   const [user, setUser] = useState("");
 
   const handleGetUser = async () => {
-    console.log('Calling getUser with ID:', params.id);
     try {
       const response = await getUser(params.id);
-      console.log('API Response:', response);
       if (response?.data) {
         setUser(response.data);
       }
@@ -31,7 +27,6 @@ const FingerPrintUpdate = () => {
     handleGetUser();
   }, [params.id]);
 
-  console.log('Current user state:', user);
 
   return (
     <AdminLayout>

@@ -78,7 +78,7 @@ const FingerprintScanner = () => {
         <br />
         <br />
 
-        <FingerprintScannerComponent user={user} setUser={setUser} />
+        <FingerprintScannerComponent setSearchTerm={setSearchTerm} user={user} setUser={setUser} />
       </div>
     </AdminLayout>
   );

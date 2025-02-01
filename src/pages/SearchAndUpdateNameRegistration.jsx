@@ -71,7 +71,37 @@ const SearchAndUpdateNameRegistration = () => {
       const response = await updateUser(formData?._id, formData);
       if (response?.status === 200) {
         alert("Trainee data updated successfully");
-        navigate(`/admin/view-user/${formData?._id}`);
+        setFormData({
+          names: "",
+          email: "",
+          community: "",
+          limited: "",
+          district: "",
+          lga: "",
+          state: "",
+          phoneNumber: "",
+          age: "",
+          sex: "",
+          degreeQualifications: "",
+          helperColumnMale: "",
+          helperColumnFemale: "",
+          languagesSpokenAndWritten: "",
+          disability: "no",
+          religion: "",
+          helperColumnChristianity: "",
+          helperColumnIslam: "",
+          birthCertificateCheck: "no",
+          idType: "",
+          idNumber: "",
+          qualification: "",
+          physicalFitness: "",
+          availability: "",
+          preExistingHealthCondition: "",
+          nursingMother: "no",
+          remark: "",
+        });
+        setSearchTerm("")
+        // navigate(`/admin/view-user/${formData?._id}`);
       } else {
         if (response?.data?.message) {
           alert(response?.data?.message);

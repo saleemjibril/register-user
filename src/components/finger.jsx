@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { updateUser } from "../apis";
 import { useNavigate } from "react-router-dom";
 
-const FingerprintScannerComponent = ({ user, setUser }) => {
+const FingerprintScannerComponent = ({ setSearchTerm, user, setUser }) => {
   const navigate = useNavigate();
   const [selectedReader, setSelectedReader] = useState("");
   const [selectedFinger, setSelectedFinger] = useState("");
@@ -12,7 +12,6 @@ const FingerprintScannerComponent = ({ user, setUser }) => {
   const [readers, setReaders] = useState([]);
   const [currentFormat] = useState("PngImage");
   const [sdk, setSdk] = useState(null);
-  const [searchTerm, setSearchTerm] = useState("");
   const [leftThumb, setLeftThumb] = useState("");
   const [rightThumb, setRightThumb] = useState("");
   const [uploadLoading, setUploadLoading] = useState(false);
@@ -141,12 +140,15 @@ const FingerprintScannerComponent = ({ user, setUser }) => {
       setStatus("Fingerprints uploaded successfully!");
       alert("Fingerprints uploaded successfully!");
 
-      
+
       setLeftThumb("")
       setRightThumb("")
       setQuality("")
       setStatus("")
       setUser("");
+      setSelectedFinger("")
+      setSearchTerm("");
+      setAcquisitionStarted(false)
       // navigate(`/user/${user._id}`);
     } catch (error) {
       setStatus("Error uploading fingerprints");

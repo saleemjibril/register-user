@@ -19,6 +19,7 @@ import User from "./pages/admin/User";
 import Finger from "./pages/Finger";
 import FingerPrintUpdate from "./pages/admin/FingerPrintUpdate";
 import AdminOutlet from "./pages/admin/Outlet";
+import DownloadIdCard from "./pages/DownloadIdCard";
 
 
 
@@ -68,6 +69,9 @@ function App() {
          />
         <Route path="/update-finger-print" 
         element={<Finger />}
+         />
+        <Route path="/id-card" 
+        element={<DownloadIdCard />}
          />
        
       </Routes>

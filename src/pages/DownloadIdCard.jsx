@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { getUser } from "../apis";
+import { getUser, searchUser } from "../apis";
 import { useParams } from "react-router-dom";
 import IDCard from "../components/IDCard";
 import moment from "moment";
@@ -7,19 +7,14 @@ import { pdf } from "@react-pdf/renderer";
 import AdminLayout from "./admin/Layout";
 
 
-const IDCardDisplay = () => {
+const DownloadIdCard = () => {
   const pathname = useParams();
   const [user, setUser] = useState(null);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+  const [searchLoading, setSearchLoading] = useState(false);
 
-  const handleGetUser = async () => {
-    const response = await getUser(pathname?.id);
-    setUser(response?.data);
-  };
 
-  useEffect(() => {
-    handleGetUser();
-  }, []);
 
   const generatePdfBlob = async () => {
     const doc = <IDCard userData={user} image={user?.photo} qrCodeUrl={user?.qrCodeUrl} />;
@@ -52,10 +47,62 @@ const IDCardDisplay = () => {
     }
   };
 
+   const handleSearch = async (e) => {
+      e.preventDefault();
+      if (!searchTerm) return;
+  
+      setSearchLoading(true);
+      try {
+        const response = await searchUser(searchTerm);
+        console.log("searchUser", response);
+        if (response?.status === 200) {
+          console.log("response.data?.photo", response.data?.photo);
+  
+          setUser(response.data);
+        } else {
+          if (response?.data?.message) {
+            alert(response?.data?.message);
+          } else {
+            alert("No user found with this user id, email or phone number");
+          }
+        }
+      } catch (error) {
+        console.error("Error searching user:", error);
+        alert("Error searching for user");
+      } finally {
+        setSearchLoading(false);
+      }
+    };
+
+
   return (
   <AdminLayout>
       <div className="id-display__container">
-      <div className="id-display__card">
+
+      <div className="id-generator__search">
+            <form onSubmit={handleSearch} className="id-generator__search-form">
+              <input
+                type="text"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="Enter user id, email or phone number"
+                className="id-generator__form-input"
+                disabled={searchLoading}
+                required
+              />
+              <br />
+              <br />
+              <button
+                type="submit"
+                className="id-generator__actions-register"
+                disabled={searchLoading || !searchTerm}
+              >
+                {searchLoading ? "Searching..." : "Search User"}
+              </button>
+            </form>
+          </div>
+
+          <div className="id-display__card">
         <div className="id-display__content">
           <div className="id-display__header">
             <h1 className="id-display__header-title">TRACTRAC</h1>
@@ -119,4 +166,4 @@ const IDCardDisplay = () => {
   );
 };
 
-export default IDCardDisplay;
+export default DownloadIdCard;

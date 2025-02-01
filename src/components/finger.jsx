@@ -2,7 +2,7 @@ import React, { useState, useEffect, useCallback } from "react";
 import { updateUser } from "../apis";
 import { useNavigate } from "react-router-dom";
 
-const FingerprintScannerComponent = ({ user }) => {
+const FingerprintScannerComponent = ({ user, setUser }) => {
   const navigate = useNavigate();
   const [selectedReader, setSelectedReader] = useState("");
   const [selectedFinger, setSelectedFinger] = useState("");
@@ -140,7 +140,14 @@ const FingerprintScannerComponent = ({ user }) => {
 
       setStatus("Fingerprints uploaded successfully!");
       alert("Fingerprints uploaded successfully!");
-      navigate(`/user/${user._id}`);
+
+      
+      setLeftThumb("")
+      setRightThumb("")
+      setQuality("")
+      setStatus("")
+      setUser("");
+      // navigate(`/user/${user._id}`);
     } catch (error) {
       setStatus("Error uploading fingerprints");
       console.error(error);

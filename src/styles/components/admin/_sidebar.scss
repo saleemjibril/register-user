@@ -73,6 +73,7 @@
         
         .sidebar__icon {
           stroke: $color-white;
+          min-width: 20px;
         }
         
         &:hover {

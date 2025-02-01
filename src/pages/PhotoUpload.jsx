@@ -1,21 +1,23 @@
 import { useEffect, useRef, useState } from "react";
 import { Badge } from "@mui/material";
 import { pdf } from "@react-pdf/renderer";
-import moment from "moment";
 import fileUpload from "../utils/fileUpload";
 import QRCode from "qrcode";
-import IDCard from "../components/IDCard";
-import { getUser, searchUser, updateUser } from "../apis";
+import { searchUser, updateUser } from "../apis";
 import AdminLayout from "./admin/Layout";
+import { useNavigate } from "react-router-dom";
 
 const PhotoUploadForm = () => {
+  const navigate = useNavigate();
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
   const [searchLoading, setSearchLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [user, setUser] = useState(null);
-  const [qrCodeUrl, setQrCodeUrl] = useState("");
   const [imageLoading, setImageLoading] = useState(false);
+  const [credentialLoading, setCredentialLoading] = useState(false);
+  const [credentials, setCredentials] = useState("");
+  const [fileName, setFileName] = useState("");
   const mediaRef = useRef(null);
 
   useEffect(() => {
@@ -33,9 +35,9 @@ const PhotoUploadForm = () => {
       if (response?.status === 200) {
         console.log("response.data?.photo", response.data?.photo);
 
-        setUser(response.data);
-        setImage(response.data?.photo || "");
-        setQrCodeUrl("");
+        setUser(response?.data);
+        setFileName(response?.data?.credentials?.name);
+        setImage(response?.data?.photo || "");
       } else {
         if (response?.data?.message) {
           alert(response?.data?.message);
@@ -60,12 +62,17 @@ const PhotoUploadForm = () => {
       const response = await updateUser(user?._id, {
         photo: image,
         qrCodeUrl: tempQr,
+        credentials: {
+          url: credentials,
+          name: fileName
+        }
       });
 
       console.log("updateUser", response);
 
       if (response?.status === 200) {
-        setQrCodeUrl(tempQr);
+        alert("Details updated successfully")
+        navigate(`/admin/view-user/${user?._id}`);
       } else {
         alert("image upload failed");
       }
@@ -78,48 +85,15 @@ const PhotoUploadForm = () => {
     }
   };
 
-  const generatePdfBlob = async () => {
-    const doc = <IDCard userData={user} image={image} qrCodeUrl={qrCodeUrl} />;
-    const asPdf = pdf([]);
-    asPdf.updateContainer(doc);
-    const blob = await asPdf.toBlob();
-    return blob;
-  };
-
-  const handlePdf = async () => {
-    try {
-      const blob = await generatePdfBlob();
-
-      const link = document.createElement("a");
-      link.href = URL.createObjectURL(blob);
-      link.download = `${user?.names}${moment(Date.now()).format(
-        "DD-MM-YYYY"
-      )}_id_card.pdf`;
-      link.click();
-
-      const file = new File([blob], link.download, { type: "application/pdf" });
-
-      setImage("");
-      setQrCodeUrl("");
-      setUser("");
-    } catch (error) {
-      alert("Unable to download ID card");
-      console.log("error creating certificate:", error);
-      return {
-        status: "error creating certificate",
-        statusCode: 500,
-      };
-    }
-  };
 
   return (
     <AdminLayout>
       <div className="id-generator">
         <div className="id-generator__container">
           <div className="id-generator__header">
-            <h2 className="id-generator__header-title">Upload Image</h2>
+            <h2 className="id-generator__header-title">Upload Image & Credentials</h2>
             <p className="id-generator__header-subtitle">
-              Search for a user to upload their image
+              Search for a user to upload their image & credentials
             </p>
           </div>
 
@@ -216,6 +190,46 @@ const PhotoUploadForm = () => {
                 </label>
               </div>
 
+              <div className="id-generator__credentials">
+            <form onSubmit={handleSearch} className="id-generator__credentials-form">
+              <input
+                type="text"
+                value={fileName}
+                // onChange={(e) => setSearchTerm(e.target.value)}
+                placeholder="File name"
+                className="id-generator__form-input"
+                disabled
+                required
+              />
+              <br />
+              <br />
+              <label>
+
+              <div
+                type="submit"
+                className="id-generator__actions-register id-generator__credentials-form__button"
+                disabled={credentialLoading}
+              >
+                {credentialLoading ? "Uploading..." : "Upload credential"}
+              </div>
+
+              <input
+                    type="file"
+                    accept="application/pdf"
+                    hidden
+                    onChange={(e) =>
+                    {
+                      setFileName(e?.target?.files[0]?.name)
+                      fileUpload(e?.target?.files[0], setCredentials, setCredentialLoading)
+                    }
+                    }
+                    ref={mediaRef}
+                  />
+              </label>
+              
+            </form>
+          </div>
+
               <div className="id-generator__form-grid">
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">User ID</label>
@@ -229,6 +243,15 @@ const PhotoUploadForm = () => {
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">Email</label>
                   <div className="id-generator__form-value">{user?.email}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Credentials</label>
+                  <div className="id-generator__form-value">
+                  {user?.credentials?.url && <button className="id-generator__actions-register"
+                  onClick={() => window.open(user?.credentials?.url, '_blank', 'noopener,noreferrer')}
+                  >View credentials</button>}
+                  </div>
                 </div>
 
                 <div className="id-generator__form-info">
@@ -386,25 +409,16 @@ const PhotoUploadForm = () => {
           )}
 
           <div className="id-generator__actions">
-            {image && !qrCodeUrl && (
+            {image && (
               <button
                 onClick={handlePhotoSubmit}
                 className="id-generator__actions-register"
                 disabled={loading || imageLoading}
               >
-                {loading ? "Submitting..." : "Submit Photo"}
+                {loading ? "Submitting..." : "Submit details"}
               </button>
             )}
 
-            {image && qrCodeUrl && (
-              <button
-                className="id-generator__actions-download"
-                disabled={loading}
-                onClick={() => handlePdf(image, qrCodeUrl)}
-              >
-                {loading ? "Generating PDF..." : "Download PDF"}
-              </button>
-            )}
           </div>
         </div>
       </div>

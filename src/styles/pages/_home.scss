@@ -5,6 +5,10 @@
   background-color: $color-gray-50;
   padding: 48px 16px;
 
+  @media (max-width: $phone) {
+    padding: 0;
+  }
+
   &__container {
     max-width: 448px;
     margin: 0 auto;
@@ -26,6 +30,10 @@
       font-size: 24px;
       font-weight: 700;
       color: $color-gray-900;
+
+      @media (max-width: $phone) {
+        font-size: 16px;
+      }
     }
 
     &-subtitle {
@@ -192,6 +200,16 @@
 
     &-download {
       @include button($color-primary, $color-primary-dark);
+    }
+  }
+
+  &__credentials-form {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+
+    &__button {
+      white-space: nowrap;
     }
   }
 }

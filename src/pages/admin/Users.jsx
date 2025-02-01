@@ -21,6 +21,8 @@ const AdminUsersList = () => {
 
   const handleGetUser = async (page = 1) => {
     const response = await getUsers({ page });
+    console.log("getUsers", response);
+    
     setUsers(response?.data?.users);
     setPagination(response?.data?.pagination);
   };
@@ -121,7 +123,7 @@ const AdminUsersList = () => {
                 <option value="userId">User ID</option>
               </select>
             </div>
-            <Link to="/" className="users-list__add-link">
+            <Link to="/create-user" className="users-list__add-link">
               <button className="users-list__add-button">Add User</button>
             </Link>
           </div>

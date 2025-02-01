@@ -7,7 +7,7 @@ export default async function fileUpload(
   auth
 ) {
 
-  console.log('started image upoload');
+  console.log('started image upoload', e);
   
   
 

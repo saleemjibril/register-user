@@ -1,14 +1,18 @@
 import React, { useEffect, useState } from "react";
-import { getUser, getUsers } from "../apis";
+import { getUser } from "../apis";
 import { useParams } from "react-router-dom";
+import IDCard from "../components/IDCard";
+import moment from "moment";
+import { pdf } from "@react-pdf/renderer";
+import AdminLayout from "./admin/Layout";
+
 
 const IDCardDisplay = () => {
   const pathname = useParams();
-
   const [user, setUser] = useState(null);
+  const [qrCodeUrl, setQrCodeUrl] = useState("");
 
   const handleGetUser = async () => {
-    const response2 = await getUsers();
     const response = await getUser(pathname?.id);
     setUser(response?.data);
   };
@@ -17,8 +21,40 @@ const IDCardDisplay = () => {
     handleGetUser();
   }, []);
 
+  const generatePdfBlob = async () => {
+    const doc = <IDCard userData={user} image={user?.photo} qrCodeUrl={user?.qrCodeUrl} />;
+    const asPdf = pdf([]);
+    asPdf.updateContainer(doc);
+    const blob = await asPdf.toBlob();
+    return blob;
+  };
+
+  const handlePdf = async () => {
+    try {
+      const blob = await generatePdfBlob();
+
+      const link = document.createElement("a");
+      link.href = URL.createObjectURL(blob);
+      link.download = `${user?.names}${moment(Date.now()).format(
+        "DD-MM-YYYY"
+      )}_id_card.pdf`;
+      link.click();
+
+      const file = new File([blob], link.download, { type: "application/pdf" });
+
+    } catch (error) {
+      alert("Unable to download ID card");
+      console.log("error creating certificate:", error);
+      return {
+        status: "error creating certificate",
+        statusCode: 500,
+      };
+    }
+  };
+
   return (
-    <div className="id-display__container">
+  <AdminLayout>
+      <div className="id-display__container">
       <div className="id-display__card">
         <div className="id-display__content">
           <div className="id-display__header">
@@ -42,7 +78,7 @@ const IDCardDisplay = () => {
 
               <div className="id-display__details-group">
                 <label className="id-display__details-label">ID NUMBER</label>
-                <p className="id-display__details-value">{user?._id}</p>
+                <p className="id-display__details-value">{user?.userId}</p>
               </div>
 
               <div className="id-display__details-group">
@@ -67,9 +103,19 @@ const IDCardDisplay = () => {
               />
             </div>
           </div>
+
+          <div className="id-generator__actions">
+            <button
+              className="id-generator__actions-download"
+              onClick={handlePdf}
+            >
+              Download ID card
+            </button>
+          </div>
         </div>
       </div>
     </div>
+  </AdminLayout>
   );
 };
 

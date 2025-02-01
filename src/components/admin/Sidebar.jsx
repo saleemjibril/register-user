@@ -14,8 +14,8 @@ const Sidebar = () => {
       </div>
       <nav className="sidebar__nav">
         <ul className="sidebar__menu">
-        <li className={pathname === "/admin/users" && "sidebar__menu-item sidebar__menu-item--active"}>
-            <Link to="/admin/users" className="sidebar__link">
+        <li className={pathname === "/" && "sidebar__menu-item sidebar__menu-item--active"}>
+            <Link to="/" className="sidebar__link">
               <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="sidebar__icon" width="20" height="20">
                 <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
                 <circle cx="9" cy="7" r="4" />
@@ -40,7 +40,7 @@ const Sidebar = () => {
                 <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z" />
                 <polyline points="9 22 9 12 15 12 15 22" />
               </svg>
-              <span>Upload photo</span>
+              <span>Upload photo and credentials</span>
             </Link>
           </li>
           

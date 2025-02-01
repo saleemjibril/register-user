@@ -36,9 +36,9 @@ const User = () => {
       <div className="id-generator">
         <div className="id-generator__container">
           <div className="id-generator__header">
-            <h2 className="id-generator__header-title">Upload Trainee Image</h2>
+            <h2 className="id-generator__header-title">{user?.names}</h2>
             <p className="id-generator__header-subtitle">
-              Upload trainee image
+            {user?.userId}
             </p>
           </div>
 
@@ -134,6 +134,14 @@ const User = () => {
                   <div className="id-generator__form-value">{user?.email}</div>
                 </div>
 
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Credentials</label>
+                  <div className="id-generator__form-value">
+                  {user?.credentials?.url && <button className="id-generator__actions-register"
+                  onClick={() => window.open(user?.credentials?.url, '_blank', 'noopener,noreferrer')}
+                  >View credentials</button>}
+                  </div>
+                </div>
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">Community</label>
                   <div className="id-generator__form-value">
@@ -292,7 +300,7 @@ const User = () => {
             <Link
               className="id-generator__actions-download"
               disabled={loading}
-              to="/admin/users"
+              to="/"
             >
               Go back to users
             </Link>

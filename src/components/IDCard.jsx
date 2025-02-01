@@ -1,128 +1,152 @@
-import React, { useState, useEffect, useRef } from "react";
-import {
-  Document,
-  Page,
-  Text,
-  View,
-  Image,
-  PDFDownloadLink,
-  StyleSheet,
-  pdf,
-} from "@react-pdf/renderer";
-import QRCode from "qrcode";
-import { createUser, updateUser } from "../apis";
-import fileUpload from "../utils/fileUpload";
-import { Badge } from "@mui/material";
-import moment from "moment";
+import React from "react";
+import { Document, Page, Text, View, Image, StyleSheet } from "@react-pdf/renderer";
+import Image1 from "../assets/logo.png";
 
 const styles = StyleSheet.create({
   page: {
     backgroundColor: "#ffffff",
-    padding: 20,
+    padding: 10,
   },
   card: {
     width: "100%",
     height: "100%",
-    backgroundColor: "#f8f9fa",
-    borderRadius: 10,
-    padding: 20,
-    border: "2px solid #e9ecef",
+    backgroundColor: "#ffffff",
+    padding: 15,
+    display: "flex",
+    alignItems: "center",
   },
   header: {
-    flexDirection: "row",
-    marginBottom: 30,
-    borderBottom: "2px solid #dee2e6",
-    paddingBottom: 15,
+    marginBottom: 15,
+    width: "100%",
+    display: "flex",
+    alignItems: "center",
   },
   logo: {
-    fontSize: 28,
-    fontWeight: "bold",
-    color: "#1a73e8",
+    width: 120,
+    height: 30,
+    marginBottom: 10,
+    // Add these properties for better SVG handling
+    objectFit: "contain",
+    preserveAspectRatio: "xMidYMid meet",
   },
-  mainContent: {
-    flexDirection: "row",
-    marginBottom: 30,
-  },
-  photoSection: {
-    width: "35%",
-    objectFit: "cover",
+  photoContainer: {
+    marginBottom: 15,
+  width: 105,
+  height: 105,
+  display: "flex",
+  alignItems: "center",
+  // Add a wrapper div with background color to create border effect
+  padding: 2,  // This creates the border width
+  backgroundColor: "#000", // This creates the border color
+  borderRadius: 4,
+
   },
   photo: {
-    width: 180,
-    height: 180,
-    borderRadius: 8,
-    border: "3px solid #dee2e6",
-    objectFit: "cover",
+    width: 100,
+  height: 100,
+  borderRadius: 2,
+  objectFit: "cover",
+  backgroundColor: "#fff", // Add this to ensure clean background
   },
   infoSection: {
-    width: "65%",
-    paddingLeft: 30,
-    justifyContent: "center",
+    width: "100%",
+    textAlign: "center",
   },
-  label: {
-    fontSize: 12,
-    color: "#6c757d",
-    marginBottom: 4,
-  },
-  value: {
-    fontSize: 18,
-    color: "#212529",
-    marginBottom: 20,
+  name: {
+    fontSize: 16,
     fontWeight: "bold",
+    marginBottom: 5,
+    textTransform: "capitalize"
   },
-  footer: {
-    flexDirection: "row",
+  title: {
+    fontSize: 12,
+    color: "#666",
+    marginBottom: 10,
+    textTransform: "capitalize"
+  },
+  website: {
+    fontSize: 10,
+    color: "#888",
+    marginTop: 5,
+    textTransform: "capitalize"
+  },
+  // New styles for back of card
+  backCard: {
+    width: "100%",
+    height: "100%",
+    backgroundColor: "#ffffff",
+    padding: 15,
+    display: "flex",
+    alignItems: "center",
     justifyContent: "space-between",
+  },
+  qrContainer: {
     alignItems: "center",
     marginTop: 20,
-    paddingTop: 15,
-    borderTop: "2px solid #dee2e6",
   },
   qrCode: {
-    width: 100,
-    height: 100,
+    width: 120,
+    height: 120,
+    marginBottom: 15,
   },
-  footerText: {
-    fontSize: 10,
-    color: "#6c757d",
+  disclaimer: {
+    width: "100%",  // Add this to ensure full width
+    fontSize: 8,
+    color: "#666",
+    textAlign: "center",
+    marginTop: "auto",
+    padding: 10,
+    display: "flex",
+    alignItems: "center",
+    flexDirection: "column",  // Add this to stack text vertically
   },
+  
+  disclaimerText: {
+    marginBottom: 3,
+    textAlign: "center",  // Add explicit text alignment
+    alignSelf: "center",  // Add this to center each text element
+  }
 });
 
 const IDCard = ({ userData, image, qrCodeUrl }) => (
   <Document>
-    <Page size={[600, 400]} style={styles.page}>
+    {/* Front of card */}
+    <Page size={[250, 280]} style={styles.page}>
       <View style={styles.card}>
         <View style={styles.header}>
-          <Text style={styles.logo}>Unknown Company</Text>
+          <Image src={Image1} style={styles.logo} />
+        </View>
+        
+        <View style={styles.photoContainer}>
+          <Image src={image} style={styles.photo} />
         </View>
 
-        <View style={styles.mainContent}>
-          <View style={styles.photoSection}>
-            <Image src={image} style={styles.photo} />
-          </View>
-
-          <View style={styles.infoSection}>
-            <Text style={styles.label}>FULL NAME</Text>
-            <Text style={styles.value}>{userData.names}</Text>
-
-            <Text style={styles.label}>ID NUMBER</Text>
-            <Text style={styles.value}>{userData.userId}</Text>
-
-            <Text style={styles.label}>ISSUED DATE</Text>
-            <Text style={styles.value}>{new Date().toLocaleDateString()}</Text>
-          </View>
+        <View style={styles.infoSection}>
+          <Text style={styles.name}>{userData.names}</Text>
+          <Text style={styles.title}>{userData.userId}</Text>
+          <Text style={styles.website}>{userData.lga}</Text>
+          {/* <Text style={styles.website}>{userData.names}</Text> */}
         </View>
+      </View>
+    </Page>
 
-        <View style={styles.footer}>
-          <View>
-            <Text style={styles.footerText}>
-              This ID card is property of Unknown Company
-            </Text>
-            <Text style={styles.footerText}>
-              If found, please return to nearest office.
-            </Text>
-          </View>
+    {/* Back of card */}
+    <Page size={[250, 280]} style={styles.page}>
+      <View style={styles.backCard}>
+      <View style={styles.header}>
+          <Image src={Image1} style={styles.logo} />
+        </View>
+        <View style={styles.qrContainer}>
           <Image src={qrCodeUrl} style={styles.qrCode} />
+        </View>
+        
+        <View style={styles.disclaimer}>
+          <Text style={styles.disclaimerText}>
+            This ID card is property of TracTrac.
+          </Text>
+          <Text style={styles.disclaimerText}>
+            If found, please return to nearest office.
+          </Text>
         </View>
       </View>
     </Page>

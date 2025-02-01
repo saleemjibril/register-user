@@ -34,7 +34,7 @@ function App() {
         <Route path="/update-user" 
         element={<SearchAndUpdateNameRegistration />}
          />
-        <Route path="/" 
+        <Route path="/create-user" 
         element={<NameRegistrationForm />}
          />
         <Route path="/user/:id" 
@@ -43,7 +43,7 @@ function App() {
         <Route path="/admin/login" 
         element={<AdminLogin />}
          />
-        <Route path="/admin/users" 
+        <Route path="/" 
         element={<AdminUsersList />}
          />
         <Route path="/admin/users/image/:id" 

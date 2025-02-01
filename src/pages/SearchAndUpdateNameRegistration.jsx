@@ -175,7 +175,7 @@ const SearchAndUpdateNameRegistration = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="id-generator__form-input"
-                  required
+                  // required
                 />
               </div>
 
@@ -484,7 +484,7 @@ const SearchAndUpdateNameRegistration = () => {
                 className="id-generator__actions-register"
                 disabled={loading}
               >
-                {loading ? "Registering..." : "Register Trainee"}
+                {loading ? "Updating..." : "Update Trainee Info"}
               </button>
             </div>
           </form>

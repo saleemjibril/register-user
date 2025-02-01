@@ -140,7 +140,7 @@ const FingerprintScannerComponent = ({ user }) => {
 
       setStatus("Fingerprints uploaded successfully!");
       alert("Fingerprints uploaded successfully!");
-      navigate(`/admin/users/${user._id}`);
+      navigate(`/user/${user._id}`);
     } catch (error) {
       setStatus("Error uploading fingerprints");
       console.error(error);
@@ -341,6 +341,71 @@ const FingerprintScannerComponent = ({ user }) => {
           <br />
           <br />
 
+          <div className="id-generator__photo">
+                <div className="id-generator__photo-preview">
+                  <div className="id-generator__photo-preview-container">
+                    {/* {image && ( */}
+
+                    <div className="id-generator__photo-preview">
+                      <div className="id-generator__photo-preview-container">
+                        {!user?.photo &&  <div>User has no image</div>}
+                        <img
+                          src={user?.photo}
+                          alt=""
+                          className="id-generator__photo-preview-image"
+                        />
+                      </div>
+                    </div>
+                    {/* )} */}
+                  </div>
+                </div>
+              </div>
+              <br />
+              <br />
+              <div className="fingerprint-grid">
+                <div className="id-generator__photo">
+                  <div className="id-generator__photo-preview">
+                    <div className="id-generator__photo-preview-container">
+                      {!user?.leftFingerPrint && (
+                        <div>No left finger print</div>
+                      )}
+
+                      <div className="id-generator__photo-preview">
+                        <div className="id-generator__photo-preview-container">
+                          <img
+                            src={user?.leftFingerPrint}
+                            alt=""
+                            className="id-generator__photo-preview-image"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+                <div className="id-generator__photo">
+                  <div className="id-generator__photo-preview">
+                    <div className="id-generator__photo-preview-container">
+                      <div className="id-generator__photo-preview">
+                        <div className="id-generator__photo-preview-container">
+                          {!user?.rightFingerPrint && (
+                            <div>No right finger print</div>
+                          )}
+                          <img
+                            src={user?.rightFingerPrint}
+                            alt=""
+                            className="id-generator__photo-preview-image"
+                          />
+                        </div>
+                       
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <br />
+              <br />
+
           <div className="id-generator__form-grid">
           <div className="id-generator__form-info">
                   <label className="id-generator__form-label">User ID</label>
@@ -356,6 +421,15 @@ const FingerprintScannerComponent = ({ user }) => {
               <label className="id-generator__form-label">Email</label>
               <div className="id-generator__form-value">{user?.email}</div>
             </div>
+
+            <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Credentials</label>
+                  <div className="id-generator__form-value">
+                  {user?.credentials?.url && <button className="id-generator__actions-register"
+                  onClick={() => window.open(user?.credentials?.url, '_blank', 'noopener,noreferrer')}
+                  >View credentials</button>}
+                  </div>
+                </div>
 
             <div className="id-generator__form-info">
               <label className="id-generator__form-label">Community</label>

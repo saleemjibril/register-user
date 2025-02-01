@@ -121,7 +121,7 @@ const NameRegistrationForm = () => {
                   value={formData.email}
                   onChange={handleChange}
                   className="id-generator__form-input"
-                  required
+                  // required
                 />
               </div>
 

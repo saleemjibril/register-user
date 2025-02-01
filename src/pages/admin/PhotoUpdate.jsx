@@ -360,7 +360,7 @@ const PhotoUpdate = () => {
             <Link
               className="id-generator__actions-download"
               disabled={loading}
-              to="/admin/users"
+              to="/"
             >
               Go back to users
             </Link>

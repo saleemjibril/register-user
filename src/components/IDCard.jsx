@@ -24,7 +24,7 @@ const styles = StyleSheet.create({
   logo: {
     width: 120,
     height: 30,
-    marginBottom: 10,
+    marginBottom: -10,
     // Add these properties for better SVG handling
     objectFit: "contain",
     preserveAspectRatio: "xMidYMid meet",
@@ -51,6 +51,17 @@ const styles = StyleSheet.create({
   infoSection: {
     width: "100%",
     textAlign: "center",
+  },
+  userTypeSection: {
+    width: "100%",
+    textAlign: "center",
+    marginBottom: 10,
+  },
+  userType: {
+    fontSize: 9,
+    color: "#666",
+    marginBottom: 10,
+    textTransform: "capitalize"
   },
   name: {
     fontSize: 16,
@@ -116,6 +127,10 @@ const IDCard = ({ userData, image, qrCodeUrl }) => (
         <View style={styles.header}>
           <Image src={Image1} style={styles.logo} />
         </View>
+
+        <View style={styles.userTypeSection}>
+          <Text style={styles.userType}>Mechanization Service Provider</Text>
+          </View>
         
         <View style={styles.photoContainer}>
           <Image src={image} style={styles.photo} />

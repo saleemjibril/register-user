@@ -1,6 +1,8 @@
 import React from "react";
 import { useDispatch } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import Image1 from "../../assets/logo.png";
+
 
 const Sidebar = () => {
   const { pathname } = useLocation();
@@ -18,9 +20,7 @@ const Sidebar = () => {
 
   return (
     <aside className="sidebar">
-      <div className="sidebar__logo">
-        <h1 className="sidebar__title">Admin Panel</h1>
-      </div>
+          <img className="sidebar__logo" src={Image1} alt="" />
       <nav className="sidebar__nav">
         <ul className="sidebar__menu">
           <li

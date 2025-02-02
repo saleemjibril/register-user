@@ -1,16 +1,25 @@
 import React, { useEffect, useState } from "react";
 import { getUser } from "../apis";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import IDCard from "../components/IDCard";
 import moment from "moment";
 import { pdf } from "@react-pdf/renderer";
 import AdminLayout from "./admin/Layout";
+import { useSelector } from "react-redux";
 
 
 const IDCardDisplay = () => {
+  const auth = useSelector((state) => state.auth);
+const navigate = useNavigate()
   const pathname = useParams();
   const [user, setUser] = useState(null);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   const handleGetUser = async () => {
     const response = await getUser(pathname?.id);

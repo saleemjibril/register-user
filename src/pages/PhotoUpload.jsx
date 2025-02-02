@@ -6,8 +6,11 @@ import QRCode from "qrcode";
 import { searchUser, updateUser } from "../apis";
 import AdminLayout from "./admin/Layout";
 import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const PhotoUploadForm = () => {
+  const auth = useSelector((state) => state.auth);
+
   const navigate = useNavigate();
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -19,6 +22,12 @@ const PhotoUploadForm = () => {
   const [credentials, setCredentials] = useState("");
   const [fileName, setFileName] = useState("");
   const mediaRef = useRef(null);
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
 
 

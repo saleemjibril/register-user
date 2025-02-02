@@ -1,16 +1,29 @@
 import React, { useState, useEffect, useCallback } from "react";
 import { getUser } from "../../apis";
-import { useParams, useLocation } from "react-router-dom";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import FingerprintScannerComponent from "../../components/finger";
 import AdminLayout from "./Layout";
+import { useSelector } from "react-redux";
 
 const FingerPrintUpdate = () => {
+
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth);
+
+
   const params = useParams();
   const location = useLocation();
   
 
 
   const [user, setUser] = useState("");
+
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   const handleGetUser = async () => {
     try {

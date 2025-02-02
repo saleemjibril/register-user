@@ -1,13 +1,21 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { searchUser, updateUser } from "../apis";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "./admin/Layout";
+import { useSelector } from "react-redux";
 
 const SearchAndUpdateNameRegistration = () => {
+  const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
+
+    useEffect(() => {
+      if(!auth?.token) {
+        navigate('/login');
+      }
+    }, [])
 
   const [formData, setFormData] = useState({
     names: "",

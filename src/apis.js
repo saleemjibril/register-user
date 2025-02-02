@@ -87,3 +87,21 @@ export const deleteEvent = async (token, id) => {
     return error?.response;
   }
 };
+
+
+export const login = async (
+  data
+) => {
+
+  
+  
+  try {
+    const res = await axios.post(
+      `${process.env.REACT_APP_API_URL}/auth/login`, data);
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};

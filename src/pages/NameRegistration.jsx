@@ -1,10 +1,13 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { createUser } from "../apis";
 import { useNavigate } from "react-router-dom";
 import AdminLayout from "./admin/Layout";
+import { useSelector } from "react-redux";
 
 const NameRegistrationForm = () => {
+  const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
+
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     names: "",
@@ -35,6 +38,12 @@ const NameRegistrationForm = () => {
     nursingMother: "no",
     remark: "",
   });
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   const handleChange = (e) => {
     const { name, value } = e.target;

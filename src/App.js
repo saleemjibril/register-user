@@ -41,11 +41,15 @@ function App() {
         <Route path="/user/:id" 
         element={<IDCardDisplay />}
          />
-        <Route path="/admin/login" 
+        <Route path="/login" 
+        element={<AdminLogin />}
+         />
+        <Route path="/login/:user" 
         element={<AdminLogin />}
          />
         <Route path="/" 
-        element={<AdminUsersList />}
+        element={
+        <AdminUsersList />}
          />
         <Route path="/admin/users/image/:id" 
         element={<PhotoUpdate />}

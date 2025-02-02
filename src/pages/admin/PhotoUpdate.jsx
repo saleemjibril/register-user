@@ -4,13 +4,18 @@ import { pdf } from "@react-pdf/renderer";
 import moment from "moment";
 import QRCode from "qrcode";
 import { getUser, updateUser } from "../../apis";
-import { Link, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import IDCard from "../../components/IDCard";
 import fileUpload from "../../utils/fileUpload";
 import AdminLayout from "./Layout";
+import { useSelector } from "react-redux";
 
 const PhotoUpdate = () => {
+  const auth = useSelector((state) => state.auth);
+
   const pathname = useParams();
+  const navigate = useNavigate()
+
 
   const [image, setImage] = useState("");
   const [loading, setLoading] = useState(false);
@@ -24,6 +29,12 @@ const PhotoUpdate = () => {
     setImage(response?.data?.photo);
     setUser(response?.data);
   };
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   useEffect(() => {
     handleGetUser();

@@ -1,13 +1,24 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { searchUser } from "../apis";
 import FingerprintScannerComponent from "../components/finger";
 import AdminLayout from "./admin/Layout";
+import { useNavigate } from "react-router-dom";
+import { useSelector } from "react-redux";
 
 const FingerprintScanner = () => {
+  const navigate = useNavigate()
+  const auth = useSelector((state) => state.auth);
+
   const [searchTerm, setSearchTerm] = useState("");
   const [user, setUser] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
   const [image, setImage] = useState("");
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   const handleSearch = async (e) => {
     e.preventDefault();

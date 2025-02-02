@@ -1,9 +1,13 @@
 import React, { useEffect, useState, useRef } from "react";
 import AdminLayout from "./Layout";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { getUsers } from "../../apis";
+import { useSelector } from "react-redux";
 
 const AdminUsersList = () => {
+  const auth = useSelector((state) => state.auth);
+  const navigate = useNavigate()
+
   const [activeMenu, setActiveMenu] = useState(null);
   const [users, setUsers] = useState([]);
   const [searchTerm, setSearchTerm] = useState("");
@@ -18,6 +22,12 @@ const AdminUsersList = () => {
   });
   const dropdownRefs = useRef({});
   const searchTimeout = useRef(null);
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   const handleGetUser = async (page = 1) => {
     const response = await getUsers({ page });

@@ -2,14 +2,20 @@ import { useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { getUser, updateUser } from "../../apis";
 import AdminLayout from "./Layout";
+import { useSelector } from "react-redux";
 
 const UpdateNameRegistration = () => {
+  const auth = useSelector((state) => state.auth);
+
+
   const pathname = useParams();
 
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchLoading, setSearchLoading] = useState(false);
+
+
 
   const [formData, setFormData] = useState({
     names: "",
@@ -40,6 +46,12 @@ const UpdateNameRegistration = () => {
     nursingMother: "no",
     remark: "",
   });
+
+  useEffect(() => {
+    if(!auth?.token) {
+      navigate('/login');
+    }
+  }, [])
 
   const handleGetUser = async () => {
     const response = await getUser(pathname?.id);

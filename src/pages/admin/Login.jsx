@@ -1,72 +1,74 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { login } from "../../apis";
+import { useDispatch } from "react-redux";
 
 const AdminLogin = () => {
+  const pathname = useParams();
+  console.log('pathname', pathname);
+  
+
+  const dispatch = useDispatch();
   const navigate = useNavigate();
   const [formData, setFormData] = useState({
-    email: '',
-    password: ''
+    username: "",
+    password: "",
   });
   const [errors, setErrors] = useState({});
   const [loading, setLoading] = useState(false);
-  const [alert, setAlert] = useState({ type: '', message: '' });
-
-  const validateForm = () => {
-    const newErrors = {};
-    
-    if (!formData.email) {
-      newErrors.email = 'Email is required';
-    } else if (!/\S+@\S+\.\S+/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email';
-    }
-    
-    if (!formData.password) {
-      newErrors.password = 'Password is required';
-    } else if (formData.password.length < 6) {
-      newErrors.password = 'Password must be at least 6 characters';
-    }
-
-    setErrors(newErrors);
-    return Object.keys(newErrors).length === 0;
-  };
+  const [alert, setAlert] = useState({ type: "", message: "" });
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      [name]: value
+      [name]: value,
     }));
     if (errors[name]) {
-      setErrors(prev => ({
+      setErrors((prev) => ({
         ...prev,
-        [name]: ''
+        [name]: "",
       }));
     }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    
-    if (!validateForm()) return;
 
     try {
       setLoading(true);
-      setAlert({ type: '', message: '' });
+      setAlert({ type: "", message: "" });
 
-      const response = await loginAdmin(formData);
+      const response = await login(formData);
+      console.log('response from login', response);
       
-      if (response.success) {
+      if (response?.status === 200) {
         setAlert({
-          type: 'success',
-          message: 'Login successful! Redirecting...'
+          type: "success",
+          message: "Login successful! Redirecting...",
         });
-        localStorage.setItem('adminToken', response.token);
-        setTimeout(() => navigate('/admin/dashboard'), 1500);
+        localStorage.setItem("token", response.data.token);
+        dispatch({
+          type: "USER_LOGIN_SUCCESS",
+          payload: {
+            token: response.data.token,
+          },
+        });
+        if(pathname?.user) {
+          navigate(`/admin/view-user/${pathname?.user}`);
+        }else {
+          navigate("/");
+        }
+      } else {
+        setAlert({
+          type: "error",
+          message: response?.data?.message || "Login failed. Please try again.",
+        });
       }
     } catch (error) {
       setAlert({
-        type: 'error',
-        message: error.message || 'Login failed. Please try again.'
+        type: "error",
+        message: error?.message || "Login failed. Please try again.",
       });
     } finally {
       setLoading(false);
@@ -89,43 +91,43 @@ const AdminLogin = () => {
         </div>
 
         {alert.message && (
-          <div className={`admin-login__alert admin-login__alert--${alert.type}`}>
+          <div
+            className={`admin-login__alert admin-login__alert--${alert.type}`}
+          >
             {alert.message}
           </div>
         )}
 
         <form onSubmit={handleSubmit} className="admin-login__form">
           <div className="admin-login__form-group">
-            <label className="admin-login__form-label">
-              Email Address
-            </label>
+            <label className="admin-login__form-label">Username</label>
             <input
-              type="email"
-              name="email"
-              value={formData.email}
+              type="text"
+              name="username"
+              value={formData.username}
               onChange={handleChange}
               className={`admin-login__form-input ${
-                errors.email ? 'admin-login__form-input--error' : ''
+                errors.username ? "admin-login__form-input--error" : ""
               }`}
-              placeholder="admin@company.com"
+              required
+              placeholder="Enter username"
             />
-            {errors.email && (
-              <p className="admin-login__form-error">{errors.email}</p>
+            {errors.username && (
+              <p className="admin-login__form-error">{errors.username}</p>
             )}
           </div>
 
           <div className="admin-login__form-group">
-            <label className="admin-login__form-label">
-              Password
-            </label>
+            <label className="admin-login__form-label">Password</label>
             <input
               type="password"
               name="password"
               value={formData.password}
               onChange={handleChange}
               className={`admin-login__form-input ${
-                errors.password ? 'admin-login__form-input--error' : ''
+                errors.password ? "admin-login__form-input--error" : ""
               }`}
+              required
               placeholder="Enter your password"
             />
             {errors.password && (
@@ -142,7 +144,7 @@ const AdminLogin = () => {
             className="admin-login__form-submit"
             disabled={loading}
           >
-            {loading ? 'Signing in...' : 'Sign In'}
+            {loading ? "Signing in..." : "Sign In"}
           </button>
         </form>
       </div>
@@ -151,18 +153,3 @@ const AdminLogin = () => {
 };
 
 export default AdminLogin;
-
-const loginAdmin = async (credentials) => {
-  return new Promise((resolve, reject) => {
-    setTimeout(() => {
-      if (credentials.email === 'admin@company.com' && credentials.password === 'password123') {
-        resolve({
-          success: true,
-          token: 'mock-jwt-token'
-        });
-      } else {
-        reject(new Error('Invalid credentials'));
-      }
-    }, 1000);
-  });
-};

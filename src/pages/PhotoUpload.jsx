@@ -62,7 +62,7 @@ const PhotoUploadForm = () => {
   const handlePhotoSubmit = async () => {
     setLoading(true);
     try {
-      const userUrl = `https://issam.tractrac.co/admin/view-user/${user?._id}`;
+      const userUrl = `https://register-user-one.vercel.app/admin/view-user/${user?._id}`;
       const tempQr = await QRCode.toDataURL(userUrl);
 
       const response = await updateUser(user?._id, {

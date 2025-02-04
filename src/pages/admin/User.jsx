@@ -21,10 +21,11 @@ const navigate = useNavigate();
   const mediaRef = useRef(null);
 
   useEffect(() => {
-    if(!auth?.token) {
-      navigate(`/login/${pathname?.id}`);
+    if(pathname?.id) {
+      
+      window.location.href=`https://issam.tractrac.co/admin/view-user/${pathname?.id}`;
     }
-  }, [])
+  }, [pathname]);
 
   const handleGetUser = async () => {
     setLoading(true);

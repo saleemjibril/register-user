@@ -1,5 +1,15 @@
 import axios from "axios";
 
+export const getRegisteredUsers= async () => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/registered`);
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
 export const getUsers = async ({ term, type, page = 1 } = {}) => {
   try {
     let queryString = `?page=${page}`;

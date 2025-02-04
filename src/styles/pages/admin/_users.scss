@@ -16,6 +16,15 @@
     font-weight: 600;
     color: #2d3748;
   }
+  &__registered {
+    font-size: 20px;
+    font-weight: 600;
+    color: #2d3748;
+
+    & > span {
+      color: $color-success;
+    }
+  }
 
   &__search-container {
     display: flex;

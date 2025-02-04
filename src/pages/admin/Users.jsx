@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import AdminLayout from "./Layout";
 import { Link, useNavigate } from "react-router-dom";
-import { getUsers } from "../../apis";
+import { getRegisteredUsers, getUsers } from "../../apis";
 import { useSelector } from "react-redux";
 
 const AdminUsersList = () => {
@@ -10,6 +10,7 @@ const AdminUsersList = () => {
 
   const [activeMenu, setActiveMenu] = useState(null);
   const [users, setUsers] = useState([]);
+  const [registeredUsers, setRegisteredUsers] = useState(null);
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("names");
   const [isSearching, setIsSearching] = useState(false);
@@ -31,6 +32,10 @@ const AdminUsersList = () => {
 
   const handleGetUser = async (page = 1) => {
     const response = await getUsers({ page });
+    const response2 = await getRegisteredUsers();
+    setRegisteredUsers(response2?.data?.registeredUsers)
+
+    
     
     setUsers(response?.data?.users);
     setPagination(response?.data?.pagination);
@@ -112,6 +117,7 @@ const AdminUsersList = () => {
       <div className="users-list">
         <header className="users-list__header">
           <h2 className="users-list__title">Users</h2>
+          <h2 className="users-list__registered">Registered users: <span>{registeredUsers}</span></h2>
           <div className="users-list__search-container">
             <div className="users-list__search-wrapper">
               <input

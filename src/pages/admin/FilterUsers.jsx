@@ -148,10 +148,9 @@ const AdminUsersList = () => {
         {/* Header Section */}
         <header className="users-list__header">
           <h2 className="users-list__title">Users</h2>
-          {/* <h2 className="users-list__registered">
+          <h2 className="users-list__registered">
             Registered users: <span>{registeredUsers}</span>
-          </h2> */}
-          
+          </h2>
 
           {/* Search Container */}
           <div className="users-list__search-container">
@@ -180,15 +179,11 @@ const AdminUsersList = () => {
           </div>
 
           {/* Filter Selects */}
-          <h2 className="users-list__registered">
-            Filter:
-          </h2>
-          <div className="users-list__search-wrapper">
-          {/* Disability Filter */}
+          <div className="users-list__filters">
+            {/* Disability Filter */}
             <select 
               value={filters.disability} 
               onChange={(e) => handleFilterChange('disability', e.target.value)}
-              className="users-list__search-type"
             >
               <option value="">Disability</option>
               <option value="yes">Yes</option>
@@ -199,8 +194,6 @@ const AdminUsersList = () => {
             <select 
               value={filters.sex} 
               onChange={(e) => handleFilterChange('sex', e.target.value)}
-              className="users-list__search-type"
-
             >
               <option value="">Gender</option>
               <option value="male">Male</option>
@@ -211,34 +204,11 @@ const AdminUsersList = () => {
             <select 
               value={filters.physicalFitness} 
               onChange={(e) => handleFilterChange('physicalFitness', e.target.value)}
-              className="users-list__search-type"
             >
               <option value="">Physical Fitness</option>
-              <option value="excellent">Excellent</option>
-                  <option value="good">Good</option>
-                  <option value="fair">Fair</option>
-                  <option value="poor">Poor</option>
+              <option value="fit">Fit</option>
+              <option value="unfit">Unfit</option>
             </select>
-            <select 
-              value={filters.religion} 
-              onChange={(e) => handleFilterChange('religion', e.target.value)}
-              className="users-list__search-type"
-            >
-              <option value="">Religion</option>
-              <option value="christianity">Christianity</option>
-              <option value="islam">Islam</option>
-            </select>
-
-            <input type="text" placeholder="Filter by State"
-            value={filters.state} 
-            onChange={(e) => handleFilterChange('state', e.target.value)}
-            className="users-list__search-type"
-            />
-            <input type="text" placeholder="Filter by LGA"
-            value={filters.lga} 
-            onChange={(e) => handleFilterChange('lga', e.target.value)}
-            className="users-list__search-type"
-            />
 
             {/* Add similar selects for other filters like state, lga, etc. */}
           </div>

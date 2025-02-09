@@ -9,6 +9,7 @@ import IDCardGenerator from "./pages/Home";
 import IDCardDisplay from "./pages/User";
 import AdminLogin from "./pages/admin/Login";
 import AdminUsersList from "./pages/admin/Users";
+import AdminUsersListFilter from "./pages/admin/FilterUsers";
 // import FingerprintScanner from "./pages/Finger";
 import NameRegistrationForm from "./pages/NameRegistration";
 import PhotoUploadForm from "./pages/PhotoUpload";
@@ -50,6 +51,10 @@ function App() {
         <Route path="/" 
         element={
         <AdminUsersList />}
+         />
+        <Route path="/filter" 
+        element={
+        <AdminUsersListFilter />}
          />
         <Route path="/admin/users/image/:id" 
         element={<PhotoUpdate />}

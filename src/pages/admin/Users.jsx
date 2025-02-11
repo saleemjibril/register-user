@@ -10,7 +10,6 @@ const AdminUsersList = () => {
 
   // State Management
   const [users, setUsers] = useState([]);
-  const [registeredUsers, setRegisteredUsers] = useState(null);
   const [isSearching, setIsSearching] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
 
@@ -148,9 +147,9 @@ const AdminUsersList = () => {
         {/* Header Section */}
         <header className="users-list__header">
           <h2 className="users-list__title">Users</h2>
-          {/* <h2 className="users-list__registered">
-            Registered users: <span>{registeredUsers}</span>
-          </h2> */}
+          <h2 className="users-list__registered">
+            Registered users: <span>{pagination?.totalItems}</span>
+          </h2>
           
 
           {/* Search Container */}
@@ -179,6 +178,7 @@ const AdminUsersList = () => {
             </Link>
           </div>
 
+       
           {/* Filter Selects */}
           <h2 className="users-list__registered">
             Filter:

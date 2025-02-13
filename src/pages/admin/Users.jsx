@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import AdminLayout from "./Layout";
 import { Link, useNavigate } from "react-router-dom";
-import { getUsers } from "../../apis";
+import { getUsers, getUsersNumbers } from "../../apis";
 import { useSelector } from "react-redux";
 
 const AdminUsersList = () => {
@@ -12,6 +12,10 @@ const AdminUsersList = () => {
   const [users, setUsers] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
+  const [selectedLga, setSelectedLga] = useState("All");
+  const [totalUsers, setTotalUsers] = useState(0);
+  const [filteredUsers, setFilteredUsers] = useState(0);
+  const [loading, setLoading] = useState(false);
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -101,6 +105,23 @@ const AdminUsersList = () => {
     }
   };
 
+  const handleGetUsersNumbers = async () => {
+    setLoading(true)
+    const response = await getUsersNumbers(selectedLga);
+      console.log("getUsersNumbers", response);
+
+      if(response?.status === 200) {
+        setTotalUsers(response?.data?.totalUsers)
+        setFilteredUsers(response?.data?.filteredUsers)
+      }
+
+      setLoading(false)
+  }
+
+  useEffect(() => {
+    handleGetUsersNumbers();
+  }, [selectedLga])
+
   // Debounced Search
   useEffect(() => {
     if (searchTimeout.current) {
@@ -147,9 +168,23 @@ const AdminUsersList = () => {
         {/* Header Section */}
         <header className="users-list__header">
           <h2 className="users-list__title">Users</h2>
+
+          <div className="users-list__search-wrapper">
           <h2 className="users-list__registered">
-            Registered users: <span>{pagination?.totalItems}</span>
+            Registered users: {loading ? "Loading..." : <span>{selectedLga === "All" ? totalUsers : filteredUsers}</span>}
           </h2>
+              <select
+                value={selectedLga}
+                onChange={(e) => setSelectedLga(e.target.value)}
+                className="users-list__search-type"
+              >
+                <option value="All">All</option>
+                <option value="nasarawa eggon">Nasarawa Eggon</option>
+                <option value="ikara">Ikara</option>
+                <option value="zaria">Zaria</option>
+              </select>
+            </div>
+         
           
 
           {/* Search Container */}

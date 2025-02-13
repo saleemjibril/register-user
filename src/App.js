@@ -21,6 +21,7 @@ import Finger from "./pages/Finger";
 import FingerPrintUpdate from "./pages/admin/FingerPrintUpdate";
 import AdminOutlet from "./pages/admin/Outlet";
 import DownloadIdCard from "./pages/DownloadIdCard";
+import Meal from "./pages/Meal";
 
 
 
@@ -81,6 +82,9 @@ function App() {
          />
         <Route path="/id-card" 
         element={<DownloadIdCard />}
+         />
+        <Route path="/meal" 
+        element={<Meal />}
          />
        
       </Routes>

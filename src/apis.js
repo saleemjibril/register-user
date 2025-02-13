@@ -67,6 +67,34 @@ export const getUsers = async ({
   }
 };
 
+
+export const getUsersNumbers = async (lga) => {
+  try {
+    // Start building query string with page
+    let queryString = `?page=1`;
+
+    // Add filters
+    const filters = [
+      { key: 'lga', value: lga },
+    ];
+
+    // Append non-empty filters
+    filters.forEach(filter => {
+      if (filter.value) {
+        queryString += `&${filter.key}=${encodeURIComponent(filter.value)}`;
+      }
+    });
+
+    // Make API call
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/numbers${queryString}`);
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
 export const getUser = async (id) => {
   try {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/${id}`);
@@ -96,6 +124,19 @@ export const createUser = async (data) => {
 
   try {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/user`, data);
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
+export const recordMeal = async (userId) => {
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/${userId}/meals`, {
+      data: "data"
+    });
 
     return res;
   } catch (error) {

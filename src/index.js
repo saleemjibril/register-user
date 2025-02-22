@@ -21,6 +21,7 @@ const store = createStore(rootReducer, composeEnhancer(applyMiddleware(thunk)));
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 root.render(
+  <React.StrictMode>
       <Provider store={store}>
 
     <Router>
@@ -28,5 +29,6 @@ root.render(
     </Router>
     </Provider>
 
+  </React.StrictMode>
 );
 

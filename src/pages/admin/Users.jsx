@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import AdminLayout from "./Layout";
 import { Link, useNavigate } from "react-router-dom";
-import { getUsers } from "../../apis";
+import { downloadExcel, getTodaysMealRecords, getUsers, getUsersNumbers } from "../../apis";
 import { useSelector } from "react-redux";
 import { saveAs } from 'file-saver';
 
@@ -14,6 +14,9 @@ const AdminUsersList = () => {
   const [users, setUsers] = useState([]);
   const [isSearching, setIsSearching] = useState(false);
   const [activeMenu, setActiveMenu] = useState(null);
+  const [mealData, setMealData] = useState(null);
+  const [mealLoading, setMealLoading] = useState(false);
+  const [excelLoading, setExcelLoading] = useState(false);
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -102,6 +105,26 @@ const AdminUsersList = () => {
       setIsSearching(false);
     }
   };
+
+
+  const handleGetTodaysMealRecords = async () => {
+    setMealLoading(true)
+    const response = await getTodaysMealRecords();
+    console.log("getTodaysMealRecords", response);
+
+
+      if(response?.status === 200) {
+        setMealData(response?.data)
+      }
+
+      setMealLoading(false)
+  }
+
+  useEffect(() => {
+    handleGetTodaysMealRecords();
+  }, [])
+
+
 
   // Debounced Search
   useEffect(() => {
@@ -201,8 +224,15 @@ const AdminUsersList = () => {
         {/* Header Section */}
         <header className="users-list__header">
           <h2 className="users-list__title">Users</h2>
-          <h2 className="users-list__registered">
-            Registered users: <span>{pagination?.totalItems}</span>
+
+        
+         
+            <h2 className="users-list__meals">
+           <div>
+           Breakfast: {mealLoading ? "Loading..." : <span>{mealData?.breakfast}</span>}
+           </div>
+            <div>Lunch: {mealLoading ? "Loading..." : <span>{mealData?.lunch}</span>}</div>
+            <div>Dinner: {mealLoading ? "Loading..." : <span>{mealData?.dinner}</span>}</div>
           </h2>
           
 

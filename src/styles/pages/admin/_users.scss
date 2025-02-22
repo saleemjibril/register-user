@@ -225,4 +225,17 @@
     font-size: 14px;
     color: #718096;
   }
+
+  &__meals {
+    display: flex;
+    gap: 20px;
+    font-weight: 500;
+
+  & > div {
+    & > span {
+      color: #FA9411;
+      font-weight: 700;
+    }
+  }
+  }
 }

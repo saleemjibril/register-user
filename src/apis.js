@@ -68,25 +68,67 @@ export const getUsers = async ({
 };
 
 
-export const getUsersNumbers = async (lga) => {
+export const getUsersNumbers = async (
+ { term, 
+  type, 
+  page = 1, 
+  disability, 
+  sex, 
+  state, 
+  lga, 
+  community, 
+  religion, 
+  physicalFitness,
+  sortBy,
+  sortOrder}
+) => {
   try {
-    // Start building query string with page
-    let queryString = `?page=1`;
+   // Start building query string with page
+   let queryString = `?page=${page}`;
 
-    // Add filters
-    const filters = [
-      { key: 'lga', value: lga },
-    ];
+   // Add search term if provided
+   if (term && type) {
+     queryString += `&searchTerm=${encodeURIComponent(term)}&searchType=${encodeURIComponent(type)}`;
+   }
 
-    // Append non-empty filters
-    filters.forEach(filter => {
-      if (filter.value) {
-        queryString += `&${filter.key}=${encodeURIComponent(filter.value)}`;
-      }
-    });
+   // Add filters
+   const filters = [
+     { key: 'disability', value: disability },
+     { key: 'sex', value: sex },
+     { key: 'state', value: state },
+     { key: 'lga', value: lga },
+     { key: 'community', value: community },
+     { key: 'religion', value: religion },
+     { key: 'physicalFitness', value: physicalFitness }
+   ];
+   
 
-    // Make API call
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/numbers${queryString}`);
+   // Append non-empty filters
+   filters.forEach(filter => {
+     if (filter.value) {
+       queryString += `&${filter.key}=${encodeURIComponent(filter.value)}`;
+     }
+   });
+
+   // Add sorting if provided
+   if (sortBy) {
+     queryString += `&sortBy=${encodeURIComponent(sortBy)}`;
+     queryString += `&sortOrder=${sortOrder || 'asc'}`;
+   }
+
+   // Make API call
+   const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/numbers${queryString}`);
+
+   return res;
+ } catch (error) {
+   console.log("ERROR", error);
+   return error?.response;
+ }
+};
+
+export const getTodaysMealRecords = async () => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/meals`);
 
     return res;
   } catch (error) {
@@ -94,7 +136,6 @@ export const getUsersNumbers = async (lga) => {
     return error?.response;
   }
 };
-
 export const getUser = async (id) => {
   try {
     const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/${id}`);
@@ -105,6 +146,67 @@ export const getUser = async (id) => {
     return error?.response;
   }
 };
+
+export const downloadExcel = async ({ 
+  term, 
+  type, 
+  disability, 
+  sex, 
+  state, 
+  lga, 
+  community, 
+  religion, 
+  physicalFitness,
+  sortBy,
+  sortOrder,
+  registeredUsersOnly ="false" 
+} = {}) => {
+  try {
+    // Start building query string with page
+    let queryString = '?';  // Changed from ?page=${page}
+
+    // Add search term if provided
+    if (term && type) {
+      queryString += `&searchTerm=${encodeURIComponent(term)}&searchType=${encodeURIComponent(type)}`;
+    }
+
+    // Add filters
+    const filters = [
+      { key: 'disability', value: disability },
+      { key: 'sex', value: sex },
+      { key: 'state', value: state },
+      { key: 'lga', value: lga },
+      { key: 'community', value: community },
+      { key: 'religion', value: religion },
+      { key: 'physicalFitness', value: physicalFitness },
+      { key: 'registeredUsersOnly', value: registeredUsersOnly }
+    ];
+
+    // Append non-empty filters
+    filters.forEach(filter => {
+      if (filter.value) {
+        queryString += `&${filter.key}=${encodeURIComponent(filter.value)}`;
+      }
+    });
+
+    // Add sorting if provided
+    if (sortBy) {
+      queryString += `&sortBy=${encodeURIComponent(sortBy)}`;
+      queryString += `&sortOrder=${sortOrder || 'asc'}`;
+    }
+
+    // Make API call with responseType: 'blob'
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/download${queryString}`, {
+      responseType: 'blob'
+    });
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
 
 export const searchUser = async (searchTerm) => {
   try {
@@ -123,7 +225,10 @@ export const createUser = async (data) => {
   console.log("skepta", data);
 
   try {
-    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user`, data);
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
+      ...data,
+      mspType: data?.age > 35 ? "existing" : "new"
+    });
 
     return res;
   } catch (error) {
@@ -151,7 +256,9 @@ export const updateUser = async (id, data) => {
   try {
     const res = await axios.put(
       `${process.env.REACT_APP_API_URL}/user/${id}`,
-      data
+      {...data,
+        mspType: data?.age > 35 ? "existing" : "new"
+      }
     );
 
     return res;

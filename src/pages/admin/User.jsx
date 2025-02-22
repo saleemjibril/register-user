@@ -278,6 +278,10 @@ return (
                 <label className="id-generator__form-label">Age</label>
                 <div className="id-generator__form-value">{user?.age}</div>
               </div>
+              <div className="id-generator__form-info">
+                <label className="id-generator__form-label">Msp Type</label>
+                <div className="id-generator__form-value">{user?.mspType}</div>
+              </div>
 
               <div className="id-generator__form-info">
                 <label className="id-generator__form-label">Sex</label>

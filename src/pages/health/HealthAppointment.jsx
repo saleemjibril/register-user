@@ -25,7 +25,8 @@ const HealthAppointment = () => {
     success: false,
   });
   const [formData, setFormData] = useState({
-    observation: "",
+    complaint: "",
+    diagnosis: "",
     prescriptions: [{ drug: "", dosage: "", duration: "" }],
   });
 
@@ -122,12 +123,13 @@ const HealthAppointment = () => {
 
       const response = await recordAppointment(user?._id, formData);
       console.log("recordAppointment", response);
-      
+
       if (response?.status === 200) {
         setFormData({
-          observation: "",
+          complaint: "",
+          diagnosis: "",
           prescriptions: [{ drug: "", dosage: "", duration: "" }],
-        })
+        });
         handleGetUser();
         alert("appointment recorded successfully");
       } else {
@@ -428,51 +430,56 @@ const HealthAppointment = () => {
           <br />
           <br />
           <div className="id-generator__past-appointments">
-              <h3 className="id-generator__form-label">Past Appointments</h3>
-              {pastAppointments?.map((appointment, index) => (
-                <div key={index} className="id-generator__appointment-card">
-                  <button
-                    className="id-generator__appointment-header"
-                    type="button"
-                    onClick={() => toggleAppointment(index)}
-                  >
+            <h3 className="id-generator__form-label">Past Appointments</h3>
+            {pastAppointments?.map((appointment, index) => (
+              <div key={index} className="id-generator__appointment-card">
+                <button
+                  className="id-generator__appointment-header"
+                  type="button"
+                  onClick={() => toggleAppointment(index)}
+                >
+                  <span>
+                    {moment(appointment.createdAt).format(
+                      "MMMM Do YYYY, h:mm:ss a"
+                    )}
+                  </span>
+                  <span className="id-generator__appointment-toggle">
+                    {expandedAppointments[index] ? "▼" : "▶"}
+                  </span>
+                </button>
 
-                    <span>{moment(appointment.createdAt).format('MMMM Do YYYY, h:mm:ss a')}</span>
-                    <span className="id-generator__appointment-toggle">
-                      {expandedAppointments[index] ? "▼" : "▶"}
-                    </span>
-                  </button>
-
-                  {expandedAppointments[index] && (
-                    <div className="id-generator__appointment-content">
-                      <div className="id-generator__appointment-section">
-                        <h4 className="id-generator__form-label">
-                          Observations
-                        </h4>
-                        <p>{appointment.observation}</p>
-                      </div>
-
-                      <div className="id-generator__appointment-section">
-                        <h4 className="id-generator__form-label">
-                          Prescriptions
-                        </h4>
-                        {appointment?.prescriptions?.map(
-                          (prescription, pIndex) => (
-                            <div
-                              key={pIndex}
-                              className="id-generator__appointment-prescription"
-                            >
-                              {prescription.drug} - {prescription.dosage} for{" "}
-                              {prescription.duration}
-                            </div>
-                          )
-                        )}
-                      </div>
+                {expandedAppointments[index] && (
+                  <div className="id-generator__appointment-content">
+                    <div className="id-generator__appointment-section">
+                      <h4 className="id-generator__form-label">Complaint</h4>
+                      <p>{appointment.complaint}</p>
                     </div>
-                  )}
-                </div>
-              ))}
-            </div>
+                    <div className="id-generator__appointment-section">
+                      <h4 className="id-generator__form-label">Diagnosis</h4>
+                      <p>{appointment.diagnosis}</p>
+                    </div>
+
+                    <div className="id-generator__appointment-section">
+                      <h4 className="id-generator__form-label">
+                        Prescriptions
+                      </h4>
+                      {appointment?.prescriptions?.map(
+                        (prescription, pIndex) => (
+                          <div
+                            key={pIndex}
+                            className="id-generator__appointment-prescription"
+                          >
+                            {prescription.drug} - {prescription.dosage} for{" "}
+                            {prescription.duration} days
+                          </div>
+                        )
+                      )}
+                    </div>
+                  </div>
+                )}
+              </div>
+            ))}
+          </div>
           <br />
           <br />
           <br />
@@ -484,23 +491,37 @@ const HealthAppointment = () => {
               Enter trainee's appointment notes here
             </p>
           </div>
-          
 
           <form className="id-generator__form" onSubmit={handleSubmit}>
             <div className="id-generator__form-grid">
               {/* Keep existing form fields */}
 
-              {/* Add Doctor's Observation */}
               <div className="id-generator__form-group id-generator__form-group--full">
                 <label className="id-generator__form-label">
-                  Doctor's Observations
+                  Trainee's Complaint
                 </label>
                 <textarea
-                  name="observation"
-                  placeholder="Enter your observations here..."
-                  value={formData.observation}
+                  name="complaint"
+                  placeholder="Enter your complaint here..."
+                  value={formData.complaint}
                   onChange={(e) =>
-                    setFormData({ ...formData, observation: e.target.value })
+                    setFormData({ ...formData, complaint: e.target.value })
+                  }
+                  className="id-generator__form-input"
+                  rows={4}
+                  required
+                />
+              </div>
+              <div className="id-generator__form-group id-generator__form-group--full">
+                <label className="id-generator__form-label">
+                  Doctors's Diagnosis
+                </label>
+                <textarea
+                  name="diagnosis"
+                  placeholder="Enter your diagnosis here..."
+                  value={formData.diagnosis}
+                  onChange={(e) =>
+                    setFormData({ ...formData, diagnosis: e.target.value })
                   }
                   className="id-generator__form-input"
                   rows={4}
@@ -540,7 +561,7 @@ const HealthAppointment = () => {
                         className="id-generator__form-input"
                       />
                       <input
-                        type="text"
+                        type="number"
                         placeholder="Dosage"
                         value={prescription.dosage}
                         onChange={(e) =>
@@ -553,7 +574,7 @@ const HealthAppointment = () => {
                         className="id-generator__form-input"
                       />
                       <input
-                        type="text"
+                        type="number"
                         placeholder="Duration"
                         value={prescription.duration}
                         onChange={(e) =>
@@ -577,8 +598,6 @@ const HealthAppointment = () => {
                 ))}
               </div>
             </div>
-
-           
 
             <div className="id-generator__actions">
               <button

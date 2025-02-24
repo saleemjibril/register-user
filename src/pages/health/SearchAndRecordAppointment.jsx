@@ -21,7 +21,8 @@ const SearchAndRecordAppointment = () => {
   const [searchLoading, setSearchLoading] = useState(false);
 
   const [formData, setFormData] = useState({
-    observation: "",
+    complaint: "",
+    diagnosis: "",
     prescriptions: [{ drug: "", dosage: "", duration: "" }],
   });
 
@@ -137,9 +138,10 @@ const SearchAndRecordAppointment = () => {
       
       if (response?.status === 200) {
         setFormData({
-          observation: "",
+          complaint: "",
+          diagnosis: "",
           prescriptions: [{ drug: "", dosage: "", duration: "" }],
-        })
+        });
         handleSearch();
         alert("appointment recorded successfully");
       } else {
@@ -487,12 +489,14 @@ const SearchAndRecordAppointment = () => {
 
                   {expandedAppointments[index] && (
                     <div className="id-generator__appointment-content">
-                      <div className="id-generator__appointment-section">
-                        <h4 className="id-generator__form-label">
-                          Observations
-                        </h4>
-                        <p>{appointment.observation}</p>
-                      </div>
+                       <div className="id-generator__appointment-section">
+                      <h4 className="id-generator__form-label">Complaint</h4>
+                      <p>{appointment.complaint}</p>
+                    </div>
+                    <div className="id-generator__appointment-section">
+                      <h4 className="id-generator__form-label">Diagnosis</h4>
+                      <p>{appointment.diagnosis}</p>
+                    </div>
 
                       <div className="id-generator__appointment-section">
                         <h4 className="id-generator__form-label">
@@ -505,7 +509,7 @@ const SearchAndRecordAppointment = () => {
                               className="id-generator__appointment-prescription"
                             >
                               {prescription.drug} - {prescription.dosage} for{" "}
-                              {prescription.duration}
+                              {prescription.duration} days
                             </div>
                           )
                         )}
@@ -532,17 +536,33 @@ const SearchAndRecordAppointment = () => {
             <div className="id-generator__form-grid">
               {/* Keep existing form fields */}
 
-              {/* Add Doctor's Observation */}
+            
               <div className="id-generator__form-group id-generator__form-group--full">
                 <label className="id-generator__form-label">
-                  Doctor's Observations
+                  Trainee's Complaint
                 </label>
                 <textarea
-                  name="observation"
-                  placeholder="Enter your observations here..."
-                  value={formData.observation}
+                  name="complaint"
+                  placeholder="Enter your complaint here..."
+                  value={formData.complaint}
                   onChange={(e) =>
-                    setFormData({ ...formData, observation: e.target.value })
+                    setFormData({ ...formData, complaint: e.target.value })
+                  }
+                  className="id-generator__form-input"
+                  rows={4}
+                  required
+                />
+              </div>
+              <div className="id-generator__form-group id-generator__form-group--full">
+                <label className="id-generator__form-label">
+                  Doctors's Diagnosis
+                </label>
+                <textarea
+                  name="diagnosis"
+                  placeholder="Enter your diagnosis here..."
+                  value={formData.diagnosis}
+                  onChange={(e) =>
+                    setFormData({ ...formData, diagnosis: e.target.value })
                   }
                   className="id-generator__form-input"
                   rows={4}
@@ -582,7 +602,7 @@ const SearchAndRecordAppointment = () => {
                         className="id-generator__form-input"
                       />
                       <input
-                        type="text"
+                        type="number"
                         placeholder="Dosage"
                         value={prescription.dosage}
                         onChange={(e) =>
@@ -595,7 +615,7 @@ const SearchAndRecordAppointment = () => {
                         className="id-generator__form-input"
                       />
                       <input
-                        type="text"
+                        type="number"
                         placeholder="Duration"
                         value={prescription.duration}
                         onChange={(e) =>

@@ -35,6 +35,12 @@ const User = () => {
     }
   }, []);
 
+  useEffect(() => {
+    if (auth?.userInfo?.role === "health") {
+      navigate(`/health/user/${pathname?.id}`);
+    }
+  }, []);
+
   const handleGetUser = async () => {
     setLoading(true);
     const response = await getUser(pathname?.id);

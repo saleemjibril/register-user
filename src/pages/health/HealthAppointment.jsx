@@ -429,7 +429,7 @@ const HealthAppointment = () => {
           <br />
           <div className="id-generator__past-appointments">
               <h3 className="id-generator__form-label">Past Appointments</h3>
-              {pastAppointments.map((appointment, index) => (
+              {pastAppointments?.map((appointment, index) => (
                 <div key={index} className="id-generator__appointment-card">
                   <button
                     className="id-generator__appointment-header"
@@ -456,7 +456,7 @@ const HealthAppointment = () => {
                         <h4 className="id-generator__form-label">
                           Prescriptions
                         </h4>
-                        {appointment.prescriptions.map(
+                        {appointment?.prescriptions?.map(
                           (prescription, pIndex) => (
                             <div
                               key={pIndex}
@@ -523,7 +523,7 @@ const HealthAppointment = () => {
                   </button>
                 </div>
 
-                {formData.prescriptions.map((prescription, index) => (
+                {formData?.prescriptions?.map((prescription, index) => (
                   <div key={index} className="id-generator__form-prescription">
                     <div className="id-generator__form-prescription-inputs">
                       <input

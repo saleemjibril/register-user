@@ -44,6 +44,7 @@ const SearchAndUpdateNameRegistration = () => {
     availability: "",
     preExistingHealthCondition: "",
     nursingMother: "no",
+    operator: "no",
     remark: "",
   });
 
@@ -335,6 +336,22 @@ const SearchAndUpdateNameRegistration = () => {
                   <option value="female">Female</option>
                 </select>
               </div>
+
+              <div className="id-generator__form-group">
+                <label className="id-generator__form-label">Operator</label>
+                <select
+                  name="operator"
+                  value={formData.operator}
+                  onChange={handleChange}
+                  className="id-generator__form-input"
+                  required
+                >
+                  <option value="">Select operator</option>
+                  <option value="yes">Yes</option>
+                  <option value="no">No</option>
+                </select>
+              </div>
+
 
               <div className="id-generator__form-group">
                 <label className="id-generator__form-label">

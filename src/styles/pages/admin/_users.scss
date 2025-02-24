@@ -35,11 +35,13 @@
   }
 
   &__search-wrapper {
+    width: 100%;
     display: flex;
     gap: 8px;
     flex: 1;
     max-width: 600px;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   &__search-input {

@@ -23,6 +23,8 @@ import AdminOutlet from "./pages/admin/Outlet";
 import DownloadIdCard from "./pages/DownloadIdCard";
 import Meal from "./pages/Meal";
 import RegisteredUsers from "./pages/admin/RegisteredUsers";
+import HealthAppointment from "./pages/health/HealthAppointment";
+import SearchAndRecordAppointment from "./pages/health/SearchAndRecordAppointment";
 
 
 
@@ -75,6 +77,13 @@ function App() {
       
         <Route path="/admin/view-user/:id" 
         element={<User />}
+         />
+      
+        <Route path="/health/user/:id" 
+        element={<HealthAppointment />}
+         />
+        <Route path="/health" 
+        element={<SearchAndRecordAppointment />}
          />
         <Route path="/finger" 
         element={<Finger />}

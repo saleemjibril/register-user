@@ -1,10 +1,11 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Image1 from "../../assets/logo.png";
 
 
 const Sidebar = () => {
+  const auth = useSelector((state) => state.auth);
 
   
   const { pathname } = useLocation();
@@ -25,7 +26,8 @@ const Sidebar = () => {
           <img className="sidebar__logo" src={Image1} alt="" />
       <nav className="sidebar__nav">
         <ul className="sidebar__menu">
-          <li
+          {auth?.userInfo?.role !== "health" && <>
+            <li
             className={
               pathname === "/" &&
               "sidebar__menu-item sidebar__menu-item--active"
@@ -108,6 +110,18 @@ const Sidebar = () => {
               <span>Download ID card</span>
             </Link>
           </li>
+          </>}
+          {auth?.userInfo?.role === "health" &&  <li
+            className={
+              pathname === "/health" &&
+              "sidebar__menu-item sidebar__menu-item--active"
+            }
+          >
+            <Link to="/health" className="sidebar__link">
+            <svg width="20" height="20" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg" ><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <title>Health</title> <rect width="24" height="24" fill="none"  stroke-width="0" opacity="0.01"></rect> <path d="M17.5,13.5h-4v4h-3v-4h-4v-3h4v-4h3v4h4ZM12,2A10,10,0,1,0,22,12,10,10,0,0,0,12,2Z" transform="translate(0 0)"></path> </g></svg>
+              <span>Record Appointment</span>
+            </Link>
+          </li>}
           <li className="sidebar__menu-item">
             <button onClick={handleLogout} className="sidebar__link">
               <span>Logout</span>

@@ -3,8 +3,7 @@ import AdminLayout from "./Layout";
 import { Link, useNavigate } from "react-router-dom";
 import { downloadExcel, getUsersNumbers } from "../../apis";
 import { useSelector } from "react-redux";
-import { saveAs } from 'file-saver';
-
+import { saveAs } from "file-saver";
 
 const RegisteredUsers = () => {
   const auth = useSelector((state) => state.auth);
@@ -36,7 +35,7 @@ const RegisteredUsers = () => {
   // Search and Filter States
   const [searchTerm, setSearchTerm] = useState("");
   const [searchType, setSearchType] = useState("names");
-  
+
   // Comprehensive Filters
   const [filters, setFilters] = useState({
     disability: "",
@@ -45,13 +44,13 @@ const RegisteredUsers = () => {
     lga: "",
     community: "",
     religion: "",
-    physicalFitness: ""
+    physicalFitness: "",
   });
 
   // Sorting State
   const [sorting, setSorting] = useState({
     sortBy: null,
-    sortOrder: 'asc'
+    sortOrder: "asc",
   });
 
   // Refs and Timeouts
@@ -60,10 +59,9 @@ const RegisteredUsers = () => {
   // Authentication Check
   useEffect(() => {
     if (!auth?.token) {
-      navigate('/login');
+      navigate("/login");
     }
   }, [auth, navigate]);
-
 
   const toggleMenu = (userId, event) => {
     event.stopPropagation();
@@ -79,11 +77,9 @@ const RegisteredUsers = () => {
         Object.entries(filters).filter(([_, v]) => v !== "")
       );
 
-      
-
       // Prepare search parameters
-      const searchParams = searchTerm 
-        ? { term: searchTerm, type: searchType } 
+      const searchParams = searchTerm
+        ? { term: searchTerm, type: searchType }
         : {};
 
       // Combine all parameters
@@ -91,16 +87,17 @@ const RegisteredUsers = () => {
         page,
         ...filterParams,
         ...searchParams,
-        ...(sorting.sortBy ? { 
-          sortBy: sorting.sortBy, 
-          sortOrder: sorting.sortOrder 
-        } : {})
+        ...(sorting.sortBy
+          ? {
+              sortBy: sorting.sortBy,
+              sortOrder: sorting.sortOrder,
+            }
+          : {}),
       };
 
       // Fetch users
       const response = await getUsersNumbers(params);
       console.log("getUsersNumbers", response);
-      
 
       // Update state
       setUsers(response?.data?.users || []);
@@ -112,9 +109,6 @@ const RegisteredUsers = () => {
       setIsSearching(false);
     }
   };
-
-
-
 
   // Debounced Search
   useEffect(() => {
@@ -133,86 +127,82 @@ const RegisteredUsers = () => {
     };
   }, [searchTerm, searchType, currentPage, filters, sorting]);
 
-
-
   // Sorting Handler
   const handleSort = (field) => {
-    setSorting(prev => ({
+    setSorting((prev) => ({
       sortBy: field,
-      sortOrder: prev.sortBy === field && prev.sortOrder === 'asc' ? 'desc' : 'asc'
+      sortOrder:
+        prev.sortBy === field && prev.sortOrder === "asc" ? "desc" : "asc",
     }));
   };
 
   // Filter Change Handler
   const handleFilterChange = (filterName, value) => {
-    setFilters(prev => ({
+    setFilters((prev) => ({
       ...prev,
-      [filterName]: value
+      [filterName]: value,
     }));
     setCurrentPage(1);
   };
 
-
-
   // Render Sorting Indicator
   const renderSortIndicator = (field) => {
     if (sorting.sortBy !== field) return null;
-    return sorting.sortOrder === 'asc' ? ' ▲' : ' ▼';
+    return sorting.sortOrder === "asc" ? " ▲" : " ▼";
   };
-
 
   const handleExportExcel = async (page = 1) => {
     try {
-      setExcelLoading(true)
+      setExcelLoading(true);
       // Prepare filter parameters
       const filterParams = Object.fromEntries(
         Object.entries(filters).filter(([_, v]) => v !== "")
       );
-  
+
       // Prepare search parameters
-      const searchParams = searchTerm 
-        ? { term: searchTerm, type: searchType } 
+      const searchParams = searchTerm
+        ? { term: searchTerm, type: searchType }
         : {};
-  
+
       // Combine all parameters
-      
+
       const params = {
         page,
         ...filterParams,
         registeredUsersOnly: "true",
         ...searchParams,
-        ...(sorting.sortBy ? { 
-          sortBy: sorting.sortBy, 
-          sortOrder: sorting.sortOrder 
-        } : {})
+        ...(sorting.sortBy
+          ? {
+              sortBy: sorting.sortBy,
+              sortOrder: sorting.sortOrder,
+            }
+          : {}),
       };
-  
+
       const response = await downloadExcel(params);
-      
+
       if (!response || response.status !== 200) {
-        setExcelLoading(false)
-        throw new Error('Export failed');
+        setExcelLoading(false);
+        throw new Error("Export failed");
       }
-  
+
       // Generate filename with date
-      const date = new Date().toISOString().split('T')[0];
+      const date = new Date().toISOString().split("T")[0];
       const filename = `users_export_${date}.xlsx`;
-  
+
       // Create blob from response data
-      const blob = new Blob([response.data], { 
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet' 
+      const blob = new Blob([response.data], {
+        type: "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
       });
-  
+
       // Download the file
       saveAs(blob, filename);
-      setExcelLoading(false)
+      setExcelLoading(false);
     } catch (error) {
-      console.error('Export error:', error);
+      console.error("Export error:", error);
       // Handle error (show notification to user)
     }
   };
-  
-
 
   return (
     <AdminLayout>
@@ -222,45 +212,38 @@ const RegisteredUsers = () => {
           <h2 className="users-list__title">Users</h2>
 
           <div className="users-list__search-wrapper">
-          <h2 className="users-list__registered">
-            Registered users: {loading ? "Loading..." : <span>{filteredUsers}</span>}
-          </h2>
-              <select
-                value={selectedLga}
-                
-                onChange={(e) => {
-                  setSelectedLga(e.target.value)
-                  handleFilterChange('lga', e.target.value)
-                }}
-                className="users-list__search-type"
-              >
-                <option value="">All</option>
-                <option value="nasarawa eggon">Nasarawa Eggon</option>
-                <option value="ikara">Ikara</option>
-                <option value="zaria">Zaria</option>
-                <option value="kokona">Kokona</option>
-              </select>
-            </div>
-         
-          
-
-      
-
-       
-         
+            <h2 className="users-list__registered">
+              Registered users:{" "}
+              {loading ? "Loading..." : <span>{filteredUsers}</span>}
+            </h2>
+            <select
+              value={selectedLga}
+              onChange={(e) => {
+                setSelectedLga(e.target.value);
+                handleFilterChange("lga", e.target.value);
+              }}
+              className="users-list__search-type"
+            >
+              <option value="">All</option>
+              <option value="nasarawa eggon">Nasarawa Eggon</option>
+              <option value="ikara">Ikara</option>
+              <option value="zaria">Zaria</option>
+              <option value="kokona">Kokona</option>
+            </select>
+          </div>
         </header>
 
-        <button 
-  onClick={handleExportExcel}
-  className="users-list__add-button"
-  style={{ marginLeft: '10px' }}
-  disabled={excelLoading}
->
-  {excelLoading ? "Loading..." : "Export to Excel"}
-        {/* Users Table */}
-</button>
-  <br />
-  <br />
+        <button
+          onClick={handleExportExcel}
+          className="users-list__add-button"
+          style={{ marginLeft: "10px" }}
+          disabled={excelLoading}
+        >
+          {excelLoading ? "Loading..." : "Export to Excel"}
+          {/* Users Table */}
+        </button>
+        <br />
+        <br />
         <div className="users-list__table-container">
           {isSearching ? (
             <div className="users-list__loading">Searching...</div>
@@ -269,20 +252,20 @@ const RegisteredUsers = () => {
               <table className="users-list__table">
                 <thead>
                   <tr>
-                    <th onClick={() => handleSort('userId')}>
-                      ID{renderSortIndicator('userId')}
+                    <th onClick={() => handleSort("userId")}>
+                      ID{renderSortIndicator("userId")}
                     </th>
-                    <th onClick={() => handleSort('names')}>
-                      Name{renderSortIndicator('names')}
+                    <th onClick={() => handleSort("names")}>
+                      Name{renderSortIndicator("names")}
                     </th>
-                    <th onClick={() => handleSort('phoneNumber')}>
-                      Phone{renderSortIndicator('phoneNumber')}
+                    <th onClick={() => handleSort("phoneNumber")}>
+                      Phone{renderSortIndicator("phoneNumber")}
                     </th>
-                    <th onClick={() => handleSort('email')}>
-                      Email{renderSortIndicator('email')}
+                    <th onClick={() => handleSort("email")}>
+                      Email{renderSortIndicator("email")}
                     </th>
-                    <th onClick={() => handleSort('age')}>
-                      Age{renderSortIndicator('age')}
+                    <th onClick={() => handleSort("age")}>
+                      Age{renderSortIndicator("age")}
                     </th>
                     <th>Actions</th>
                   </tr>
@@ -334,6 +317,12 @@ const RegisteredUsers = () => {
                                 >
                                   Update Fingerprint
                                 </Link>
+                                {auth?.userInfo?.role === "health" && <Link
+                                  to={`/health/user/${user._id}`}
+                                  className="users-list__dropdown-item"
+                                >
+                                  Record Health Appointment
+                                </Link>}
                               </div>
                             )}
                           </div>
@@ -347,7 +336,9 @@ const RegisteredUsers = () => {
               {/* Pagination */}
               <div className="users-list__pagination">
                 <button
-                  onClick={() => setCurrentPage(prev => Math.max(1, prev - 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) => Math.max(1, prev - 1))
+                  }
                   disabled={currentPage === 1}
                   className="users-list__pagination-button"
                 >
@@ -359,7 +350,11 @@ const RegisteredUsers = () => {
                 </span>
 
                 <button
-                  onClick={() => setCurrentPage(prev => Math.min(pagination.totalPages, prev + 1))}
+                  onClick={() =>
+                    setCurrentPage((prev) =>
+                      Math.min(pagination.totalPages, prev + 1)
+                    )
+                  }
                   disabled={currentPage === pagination?.totalPages}
                   className="users-list__pagination-button"
                 >

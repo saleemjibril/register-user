@@ -22,6 +22,7 @@ export const getUsers = async ({
   religion, 
   physicalFitness,
   sortBy,
+  operator,
   sortOrder
 } = {}) => {
   try {
@@ -41,7 +42,8 @@ export const getUsers = async ({
       { key: 'lga', value: lga },
       { key: 'community', value: community },
       { key: 'religion', value: religion },
-      { key: 'physicalFitness', value: physicalFitness }
+      { key: 'physicalFitness', value: physicalFitness },
+      { key: 'operator', value: operator }
     ];
 
     // Append non-empty filters
@@ -227,7 +229,7 @@ export const createUser = async (data) => {
   try {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/user`, {
       ...data,
-      mspType: data?.age > 35 ? "existing" : "new"
+      mspType: Number(data?.age) > 35 ? "existing" : "new"
     });
 
     return res;
@@ -249,6 +251,18 @@ export const recordMeal = async (userId) => {
     return error?.response;
   }
 };
+export const recordAppointment = async (userId, data) => {
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/${userId}/health`, 
+      data
+    );
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
 
 export const updateUser = async (id, data) => {
   console.log("skepta", data);
@@ -257,7 +271,7 @@ export const updateUser = async (id, data) => {
     const res = await axios.put(
       `${process.env.REACT_APP_API_URL}/user/${id}`,
       {...data,
-        mspType: data?.age > 35 ? "existing" : "new"
+        mspType: Number(data?.age) > 35 ? "existing" : "new"
       }
     );
 

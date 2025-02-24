@@ -289,6 +289,11 @@ return (
               </div>
 
               <div className="id-generator__form-info">
+                <label className="id-generator__form-label">Operator</label>
+                <div className="id-generator__form-value">{user?.operator}</div>
+              </div>
+
+              <div className="id-generator__form-info">
                 <label className="id-generator__form-label">
                   Degree Qualifications
                 </label>

@@ -56,6 +56,8 @@ const AdminLogin = () => {
         });
         if(pathname?.user) {
           navigate(`/admin/view-user/${pathname?.user}`);
+        }else if(response?.data?.role === "health") {
+          navigate(`/health`);
         }else {
           navigate("/");
         }

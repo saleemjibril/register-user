@@ -84,6 +84,8 @@ export const getUsersNumbers = async (
   sortBy,
   sortOrder}
 ) => {
+  console.log("state!", state);
+  
   try {
    // Start building query string with page
    let queryString = `?page=${page}`;
@@ -97,8 +99,8 @@ export const getUsersNumbers = async (
    const filters = [
      { key: 'disability', value: disability },
      { key: 'sex', value: sex },
-     { key: 'state', value: state },
      { key: 'lga', value: lga },
+     { key: 'state', value: state },
      { key: 'community', value: community },
      { key: 'religion', value: religion },
      { key: 'physicalFitness', value: physicalFitness }
@@ -243,6 +245,20 @@ export const recordMeal = async (userId) => {
   try {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/${userId}/meals`, {
       data: "data"
+    });
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
+export const recordAttendance = async (userId, subject) => {
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/${userId}/attendance`, {
+      subject,
+      attended: true
     });
 
     return res;

@@ -138,8 +138,13 @@ const RegisteredUsers = () => {
 
   // Filter Change Handler
   const handleFilterChange = (filterName, value) => {
+    console.log({
+      filterName, value
+    });
+
+    
+    
     setFilters((prev) => ({
-      ...prev,
       [filterName]: value,
     }));
     setCurrentPage(1);
@@ -217,7 +222,7 @@ const RegisteredUsers = () => {
               {loading ? "Loading..." : <span>{filteredUsers}</span>}
             </h2>
             <select
-              value={selectedLga}
+              value={filters.lga}
               onChange={(e) => {
                 setSelectedLga(e.target.value);
                 handleFilterChange("lga", e.target.value);
@@ -229,6 +234,18 @@ const RegisteredUsers = () => {
               <option value="ikara">Ikara</option>
               <option value="zaria">Zaria</option>
               <option value="kokona">Kokona</option>
+            </select>
+            <select
+              value={filters?.state}
+              onChange={(e) => {
+                setSelectedLga(e.target.value);
+                handleFilterChange("state", e.target.value);
+              }}
+              className="users-list__search-type"
+            >
+              <option value="">Select State</option>
+              <option value="nasarawa">Nasarawa</option>
+              <option value="kaduna">Kaduna</option>
             </select>
           </div>
         </header>

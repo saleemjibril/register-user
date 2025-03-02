@@ -470,7 +470,7 @@ const HealthAppointment = () => {
                             className="id-generator__appointment-prescription"
                           >
                             {prescription.drug} - {prescription.dosage} for{" "}
-                            {prescription.duration} days
+                            {prescription.duration}
                           </div>
                         )
                       )}
@@ -561,7 +561,7 @@ const HealthAppointment = () => {
                         className="id-generator__form-input"
                       />
                       <input
-                        type="number"
+                        type="text"
                         placeholder="Dosage"
                         value={prescription.dosage}
                         onChange={(e) =>
@@ -574,7 +574,7 @@ const HealthAppointment = () => {
                         className="id-generator__form-input"
                       />
                       <input
-                        type="number"
+                        type="text"
                         placeholder="Duration"
                         value={prescription.duration}
                         onChange={(e) =>

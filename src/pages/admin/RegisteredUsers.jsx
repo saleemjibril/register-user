@@ -234,6 +234,7 @@ const RegisteredUsers = () => {
               <option value="ikara">Ikara</option>
               <option value="zaria">Zaria</option>
               <option value="kokona">Kokona</option>
+              <option value="akwanga">Akwanga</option>
             </select>
             <select
               value={filters?.state}

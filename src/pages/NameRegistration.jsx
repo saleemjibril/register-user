@@ -79,7 +79,7 @@ const NameRegistrationForm = () => {
 
       if (response?.data?.user?._id) {
         alert("User created successfully");
-        navigate(`/admin/view-user/${response?.data?.user?._id}`);
+        // navigate(`/admin/view-user/${response?.data?.user?._id}`);
       } else {
         if (response?.data?.message) {
           alert(response?.data?.message);

@@ -121,7 +121,7 @@ export const getUsersNumbers = async (
    }
 
    // Make API call
-   const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/numbers${queryString}`);
+   const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/numbers`);
 
    return res;
  } catch (error) {
@@ -200,7 +200,7 @@ export const downloadExcel = async ({
     }
 
     // Make API call with responseType: 'blob'
-    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/download${queryString}`, {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/user/download`, {
       responseType: 'blob'
     });
 

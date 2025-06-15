@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import moment from "moment";
 import QRCode from "qrcode";
-import { getUser, recordAttendance, recordMeal, updateUser } from "../../apis";
+import { checkInTablet, checkOutTablet, getUser, recordAttendance, recordMeal, updateUser } from "../../apis";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import IDCard from "../../components/IDCard";
 import fileUpload from "../../utils/fileUpload";
@@ -10,6 +10,8 @@ import AdminLayout from "./Layout";
 import { useSelector } from "react-redux";
 import MealModal from "../../components/MealModal";
 import AttendanceModal from "../../components/AttendanceModal";
+import TabChecking from "../../components/TabChecking";
+import { toast } from "react-toastify";
 
 const User = () => {
   const pathname = useParams();
@@ -35,6 +37,7 @@ const User = () => {
     success: false,
   });
   const [open, setOpen] = useState(false);
+  const [tabCheckingOpen, setTabCheckingOpen] = useState(false);
 
   const mediaRef = useRef(null);
 
@@ -64,6 +67,11 @@ const User = () => {
   useEffect(() => {
     if (auth?.userInfo?.role === "attendance") {
     showClassSelectModal();
+    }
+  }, []);
+  useEffect(() => {
+    if (auth?.userInfo?.role === "tab-checking") {
+    showTabCheckingModal();
     }
   }, []);
 
@@ -119,7 +127,42 @@ const User = () => {
     }
     setLoading(false);
   };
+  
+  const handleTabletCheckIn = async () => {
+    setLoading(true);
+    const response = await checkInTablet(pathname?.id);
+    console.log("recordAttendance", response);
 
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (response.status === 200) {
+      toast.success(response?.data?.message)
+          setTabCheckingOpen(false)
+          handleGetUser();
+
+    } else {
+       toast.error(response?.data?.message)
+    }
+    setLoading(false);
+  };
+  const handleTabletCheckOut = async () => {
+    setLoading(true);
+    const response = await checkOutTablet(pathname?.id);
+    console.log("recordAttendance", response);
+
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (response.status === 200) {
+      toast.success(response?.data?.message)
+                setTabCheckingOpen(false)
+                handleGetUser();
+    } else {
+      toast.error(response?.data?.message)
+    }
+    setLoading(false);
+  };
   const getTodayMeals = () => {
     if (!user?.mealRecords) return null;
 
@@ -166,9 +209,12 @@ const User = () => {
   };
 
   const showClassSelectModal = () => {
-    console.log("yooo!");
 
     setOpen(true);
+  };
+  const showTabCheckingModal = () => {
+
+    setTabCheckingOpen(true);
   };
 
   const getCurrentMealType = () => {
@@ -547,6 +593,7 @@ const User = () => {
         )}
 
        {user &&  <>
+
         <AttendanceModal 
              open={open}
              onClose={handleRecordAttendance}
@@ -556,6 +603,12 @@ const User = () => {
              onViewClick={handleViewClick}
               />
 
+        <TabChecking 
+             open={tabCheckingOpen}
+             loading={loading}
+             onCheckIn={handleTabletCheckIn}
+             onCheckOut={handleTabletCheckOut}
+              />
 <MealModal
               isOpen={attendanceModalState.isOpen}
               message={attendanceModalState.message}
@@ -570,6 +623,20 @@ const User = () => {
                 <span>
                   {moment(item?.date).format("MMMM Do YYYY")} -{" "}
                   {item?.subject}
+                </span>
+                <span className="recorded">✓</span>
+              </div>
+            ))}
+          </div>
+        </div>
+        <div className="meal-status" id="attendance">
+          <h2>Tab Checking In/Out</h2>
+          <div className="meal-records">
+            {[...user?.tabChecking]?.reverse()?.map((item) => (
+              <div className="meal-record">
+                <span>
+                  {moment(item?.timeStamp).format("MMMM Do YYYY, h:mm A")} -{" "}
+                  {item?.checkType}
                 </span>
                 <span className="recorded">✓</span>
               </div>

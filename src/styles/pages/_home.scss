@@ -276,10 +276,15 @@
     justify-content: center;
     gap: 16px;
     
+    
     &-register {
       @include button($color-success, $color-success-dark);
     }
-
+    &-register-big {
+      @include button($color-success, $color-success-dark);
+      padding-left: 70px;
+      padding-right: 70px;
+    }
     &-download {
       @include button($color-primary, $color-primary-dark);
     }

@@ -25,6 +25,8 @@ import Meal from "./pages/Meal";
 import RegisteredUsers from "./pages/admin/RegisteredUsers";
 import HealthAppointment from "./pages/health/HealthAppointment";
 import SearchAndRecordAppointment from "./pages/health/SearchAndRecordAppointment";
+import { ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 
 
@@ -32,6 +34,7 @@ function App() {
 
   return (
     // <LocomotiveScrollProvider options={options} containerRef={ref}>
+     <>
       <Routes>
 {/*       
         <Route path="/" 
@@ -102,6 +105,9 @@ function App() {
          />
        
       </Routes>
+              <ToastContainer position="top-right" />
+
+     </>
      
   );
 }

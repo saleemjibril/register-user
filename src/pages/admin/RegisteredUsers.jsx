@@ -96,7 +96,10 @@ const RegisteredUsers = () => {
       };
 
       // Fetch users
-      const response = await getUsersNumbers(params);
+      const response = await getUsersNumbers({
+      startDate: "2025-06-10",
+      endDate: "2025-06-12",
+    });
       console.log("getUsersNumbers", response);
 
       // Update state
@@ -184,7 +187,12 @@ const RegisteredUsers = () => {
           : {}),
       };
 
-      const response = await downloadExcel(params);
+      const response = await downloadExcel(
+        {
+      startDate: "2025-06-10",
+      endDate: "2025-06-12",
+    }
+      );
 
       if (!response || response.status !== 200) {
         setExcelLoading(false);

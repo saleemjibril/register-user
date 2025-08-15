@@ -54,7 +54,7 @@
 
     &:focus {
       outline: none;
-      border-color: #FA9411;
+      border-color: #d9b34e;
       box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
     }
   }
@@ -70,14 +70,14 @@
 
     &:focus {
       outline: none;
-      border-color: #FA9411;
+      border-color: #d9b34e;
       box-shadow: 0 0 0 3px rgba(66, 153, 225, 0.15);
     }
   }
 
   &__add-button {
     padding: 8px 16px;
-    background-color: #FA9411;
+    background-color: #d9b34e;
     color: white;
     border: none;
     border-radius: 6px;
@@ -195,8 +195,8 @@
 
     &:hover:not(:disabled) {
       background-color: #f7fafc;
-      border-color: #FA9411;
-      color: #FA9411;
+      border-color: #d9b34e;
+      color: #d9b34e;
     }
 
     &:focus {
@@ -235,7 +235,7 @@
 
   & > div {
     & > span {
-      color: #FA9411;
+      color: #d9b34e;
       font-weight: 700;
     }
   }

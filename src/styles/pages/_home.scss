@@ -142,6 +142,23 @@
         grid-column: 1 / -1;
       }
     }
+    &-checkbox{
+      display: flex;
+      align-items: start;
+      // background: yellow;
+      margin-top: 20px;
+
+      & > input {
+        width: 40px;
+        height: 40px;
+      }
+
+      // margin-bottom: 0;
+
+      // &--full {
+      //   grid-column: 1 / -1;
+      // }
+    }
 
     &-info {
       // display: flex;

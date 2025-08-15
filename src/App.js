@@ -27,6 +27,11 @@ import HealthAppointment from "./pages/health/HealthAppointment";
 import SearchAndRecordAppointment from "./pages/health/SearchAndRecordAppointment";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import InventoryEntryForm from "./pages/inventory/InventoryEntry";
+import InventoryTrackingPage from "./pages/admin/Inventories";
+import UpdateInventoryForm from "./pages/inventory/UpdateInventory";
+import StudentDistributionHistory from "./pages/admin/StudentDistributionHistory";
+import PadDistributionInsightsPage from "./pages/admin/DistributionStats";
 
 
 
@@ -79,7 +84,7 @@ function App() {
          />
       
         <Route path="/admin/view-user/:id" 
-        element={<User />}
+        element={<User  />}
          />
       
         <Route path="/health/user/:id" 
@@ -103,6 +108,23 @@ function App() {
         <Route path="/meal" 
         element={<Meal />}
          />
+        <Route path="/inventory" 
+        element={<InventoryEntryForm />}
+         />
+        <Route path="/inventory/:id" 
+        element={<UpdateInventoryForm />}
+         />
+        <Route path="/inventories" 
+        element={<InventoryTrackingPage />}
+         />
+         <Route
+  path="/admin/users/:studentId/distribution-history"
+  element={<StudentDistributionHistory />}
+/>
+         <Route
+  path="/distribution"
+  element={<PadDistributionInsightsPage />}
+/>
        
       </Routes>
               <ToastContainer position="top-right" />

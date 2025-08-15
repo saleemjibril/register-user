@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { Link, useLocation, useNavigate } from "react-router-dom";
 import Image1 from "../../assets/logo.png";
+import { PlusCircle, Package, BarChart3 } from "lucide-react";
 
 
 const Sidebar = () => {
@@ -138,6 +139,42 @@ const Sidebar = () => {
               <span>Download ID card</span>
             </Link>
           </li>
+          <li
+  className={
+    pathname === "/inventory" &&
+    "sidebar__menu-item sidebar__menu-item--active"
+  }
+>
+  <Link to="/inventory" className="sidebar__link">
+    <PlusCircle className="sidebar__icon" size={20} />
+    <span>Add inventory</span>
+  </Link>
+</li>
+
+<li
+  className={
+    pathname === "/inventories" &&
+    "sidebar__menu-item sidebar__menu-item--active"
+  }
+>
+  <Link to="/inventories" className="sidebar__link">
+    <Package className="sidebar__icon" size={20} />
+    <span>View inventory</span>
+  </Link>
+</li>
+
+<li
+  className={
+    pathname === "/distribution" &&
+    "sidebar__menu-item sidebar__menu-item--active"
+  }
+>
+  <Link to="/distribution" className="sidebar__link">
+    <BarChart3 className="sidebar__icon" size={20} />
+    <span>Distribution insights</span>
+  </Link>
+</li>
+
           </>}
           {auth?.userInfo?.role === "health" &&  <li
             className={

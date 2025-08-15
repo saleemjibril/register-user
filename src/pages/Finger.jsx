@@ -41,7 +41,7 @@ const FingerprintScanner = () => {
         if (response?.data?.message) {
           alert(response?.data?.message);
         } else {
-          alert("No user found with this user id, email or phone number");
+          alert("No user found with this user id");
         }
       }
     } catch (error) {
@@ -68,7 +68,7 @@ const FingerprintScanner = () => {
               type="text"
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Enter user id, email or phone number"
+              placeholder="Enter user id"
               className="id-generator__form-input"
               disabled={searchLoading}
               required

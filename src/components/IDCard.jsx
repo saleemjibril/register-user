@@ -129,7 +129,7 @@ const IDCard = ({ userData, image, qrCodeUrl }) => (
         </View>
 
         <View style={styles.userTypeSection}>
-          <Text style={styles.userType}>Mechanization Service Provider</Text>
+          <Text style={styles.userType}>Delivering innovative solutions</Text>
           </View>
         
         <View style={styles.photoContainer}>
@@ -157,7 +157,7 @@ const IDCard = ({ userData, image, qrCodeUrl }) => (
         
         <View style={styles.disclaimer}>
           <Text style={styles.disclaimerText}>
-            This ID card is property of TracTrac.
+            This ID card is property of ChananHill.
           </Text>
           <Text style={styles.disclaimerText}>
             If found, please return to nearest office.

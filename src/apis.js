@@ -256,6 +256,7 @@ export const createUser = async (data) => {
   }
 };
 
+
 export const recordMeal = async (userId) => {
   try {
     const res = await axios.post(`${process.env.REACT_APP_API_URL}/user/${userId}/meals`, {
@@ -431,3 +432,134 @@ export const bulkCheckOutTablets = async (checkOutData) => {
     return error?.response;
   }
 };
+
+export const createInventoryEntry = async (data) => {
+  console.log("skepta", data);
+
+  try {
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/inventory`, {
+      ...data,
+      mspType: Number(data?.age) > 35 ? "existing" : "new"
+    });
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
+export const getAllInventory = async (params = {}) => {
+  try {
+    // Destructure parameters with defaults
+    const {
+      page = 1,
+      limit = 10,
+      status,
+      brandType,
+      storageLocation,
+      isLowStock,
+      search
+    } = params;
+
+    // Build query parameters object
+    const queryParams = new URLSearchParams();
+    
+    // Add pagination parameters
+    queryParams.append('page', page.toString());
+    queryParams.append('limit', limit.toString());
+    
+    // Add optional filter parameters only if they exist
+    if (status) queryParams.append('status', status);
+    if (brandType) queryParams.append('brandType', brandType);
+    if (storageLocation) queryParams.append('storageLocation', storageLocation);
+    if (isLowStock !== undefined) queryParams.append('isLowStock', isLowStock.toString());
+    if (search) queryParams.append('search', search);
+
+    // Make the API request
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/inventory?${queryParams.toString()}`
+    );
+
+    return res;
+  } catch (error) {
+    console.log("GET INVENTORY ERROR ---->", error);
+    return error?.response;
+  }
+};
+
+export const updateInventory = async (id, data) => {
+
+  try {
+    const res = await axios.put(
+      `${process.env.REACT_APP_API_URL}/inventory/${id}`,
+      data
+    );
+
+    return res;
+  } catch (error) {
+    console.log("ERROR", error);
+    return error?.response;
+  }
+};
+
+
+export const getInventoryById = async (id) => {
+  try {
+    const res = await axios.get(`${process.env.REACT_APP_API_URL}/inventory/${id}`);
+
+    return res;
+  } catch (error) {
+    console.log("GET STATUS ERROR", error);
+    return error?.response;
+  }
+};
+
+export const distributePadToStudent = async (data) => {
+  console.log("skepta", data);
+
+    const res = await axios.post(`${process.env.REACT_APP_API_URL}/inventory/distribute`, 
+      data
+     );
+
+    return res;
+  
+};
+
+
+
+export const getStudentDistributionHistory = async (studentUserId, { page = 1, limit = 10 } = {}) => {
+  try {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/inventory/student/${studentUserId}/history?page=${page}&limit=${limit}`
+    );
+    return res;
+  } catch (error) {
+    console.error("ERROR fetching student distribution history", error);
+    return error?.response;
+  }
+};
+
+export const getDailyDistributionReport = async () => {
+  try {
+    const res = await axios.get(
+      `${process.env.REACT_APP_API_URL}/inventory/reports/daily`
+    );
+    return res;
+  } catch (error) {
+    console.error("ERROR fetching student distribution history", error);
+    return error?.response;
+  }
+};
+
+// export const getPadDistributionInsights = async () => {
+//   try {
+//     const res = await axios.get(
+//       `${process.env.REACT_APP_API_URL}/inventory/reports`
+//     );
+//     return res;
+//   } catch (error) {
+//     console.error("ERROR fetching student distribution history", error);
+//     return error?.response;
+//   }
+// };

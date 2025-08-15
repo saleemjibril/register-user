@@ -3,16 +3,24 @@ import AdminLayout from "./Layout";
 import { Link, useNavigate } from "react-router-dom";
 import {
   downloadExcel,
+  getAllInventory,
   getTodaysMealRecords,
   getUsers,
   getUsersNumbers,
 } from "../../apis";
 import { useSelector } from "react-redux";
 import { saveAs } from "file-saver";
+import moment from "moment";
+import {
+  Package, Search, Filter, Download, Plus, Edit, Trash2,
+  AlertTriangle, CheckCircle, XCircle, Clock, Eye,
+  ChevronLeft, ChevronRight, RefreshCw, MapPin, User
+} from 'lucide-react';
 
 const AdminUsersList = () => {
   const auth = useSelector((state) => state.auth);
   const navigate = useNavigate();
+console.log("auth", auth);
 
   // State Management
   const [users, setUsers] = useState([]);
@@ -21,6 +29,7 @@ const AdminUsersList = () => {
   const [mealData, setMealData] = useState(null);
   const [mealLoading, setMealLoading] = useState(false);
   const [excelLoading, setExcelLoading] = useState(false);
+  const [summary, setSummary] = useState(null);
 
   // Pagination State
   const [currentPage, setCurrentPage] = useState(1);
@@ -124,6 +133,7 @@ const AdminUsersList = () => {
 
   useEffect(() => {
     handleGetTodaysMealRecords();
+    handleGetAllInventory();
   }, []);
 
   // Debounced Search
@@ -218,6 +228,34 @@ const AdminUsersList = () => {
     }
   };
 
+
+  const handleGetAllInventory = async () => {
+    // setLoading(true);
+    try {
+      const response = await getAllInventory();
+
+      if (response?.data?.data?.inventory) {
+        // Create summary from real data
+        const inventory = response.data.data.inventory;
+        const summary = {
+          totalBatches: inventory.length,
+          totalSupplied: inventory.reduce((sum, item) => sum + item.quantitySupplied, 0),
+          totalCurrentStock: inventory.reduce((sum, item) => sum + item.currentStock, 0),
+          totalValue: inventory.reduce((sum, item) => sum + item.totalValue, 0),
+          activeBatches: inventory.filter(item => item.status === 'active').length,
+          depletedBatches: inventory.filter(item => item.status === 'depleted').length,
+          expiredBatches: inventory.filter(item => item.status === 'expired').length,
+          lowStockBatches: inventory.filter(item => item.isLowStock).length
+        };
+        setSummary(summary);
+      }
+    } catch (error) {
+      console.error("Fetch inventory error:", error);
+    } finally {
+      // setLoading(false);
+    }
+  };
+
   return (
     <AdminLayout>
       <div className="users-list">
@@ -256,8 +294,8 @@ const AdminUsersList = () => {
                 className="users-list__search-type"
               >
                 <option value="names">Name</option>
-                <option value="email">Email</option>
-                <option value="phoneNumber">Phone</option>
+                {/* <option value="email">Email</option>
+                <option value="phoneNumber">Phone</option> */}
                 <option value="userId">User ID</option>
               </select>
             </div>
@@ -292,7 +330,7 @@ const AdminUsersList = () => {
             </select>
 
             {/* Physical Fitness Filter */}
-            <select
+            {/* <select
               value={filters.physicalFitness}
               onChange={(e) =>
                 handleFilterChange("physicalFitness", e.target.value)
@@ -304,8 +342,8 @@ const AdminUsersList = () => {
               <option value="good">Good</option>
               <option value="fair">Fair</option>
               <option value="poor">Poor</option>
-            </select>
-            <select
+            </select> */}
+            {/* <select
               value={filters.religion}
               onChange={(e) => handleFilterChange("religion", e.target.value)}
               className="users-list__search-type"
@@ -313,9 +351,9 @@ const AdminUsersList = () => {
               <option value="">Religion</option>
               <option value="christianity">Christianity</option>
               <option value="islam">Islam</option>
-            </select>
+            </select> */}
 
-            <input
+            {/* <input
               type="text"
               placeholder="Filter by State"
               value={filters.state}
@@ -328,9 +366,9 @@ const AdminUsersList = () => {
               value={filters.lga}
               onChange={(e) => handleFilterChange("lga", e.target.value)}
               className="users-list__search-type"
-            />
+            /> */}
 
-            <select
+            {/* <select
               value={filters.operator}
               onChange={(e) => handleFilterChange("operator", e.target.value)}
               className="users-list__search-type"
@@ -338,7 +376,7 @@ const AdminUsersList = () => {
               <option value="">Operator</option>
               <option value="yes">Yes</option>
               <option value="no">No</option>
-            </select>
+            </select> */}
 
             {/* Add similar selects for other filters like state, lga, etc. */}
           </div>
@@ -355,6 +393,59 @@ const AdminUsersList = () => {
         </button>
         <br />
         <br />
+
+          {/* Summary Cards */}
+{summary && (
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 mb-6">
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex items-center">
+        <div className="p-3 rounded-full" style={{ backgroundColor: '#d9b34e20' }}>
+          <Package className="text-[#d9b34e]" size={24} />
+        </div>
+        <div className="ml-4">
+          <p className="text-lg text-gray-600">Total Batches</p>
+          <p className="text-2xl font-bold text-gray-900">{summary.totalBatches}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex items-center">
+        <div className="p-3 rounded-full" style={{ backgroundColor: '#d9b34e20' }}>
+          <CheckCircle className="text-[#d9b34e]" size={24} />
+        </div>
+        <div className="ml-4">
+          <p className="text-lg text-gray-600">Current Stock</p>
+          <p className="text-2xl font-bold text-gray-900">{summary.totalCurrentStock.toLocaleString()}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex items-center">
+        <div className="p-3 rounded-full" style={{ backgroundColor: '#d9b34e20' }}>
+          <AlertTriangle className="text-[#d9b34e]" size={24} />
+        </div>
+        <div className="ml-4">
+          <p className="text-lg text-gray-600">Low Stock Items</p>
+          <p className="text-2xl font-bold text-gray-900">{summary.lowStockBatches}</p>
+        </div>
+      </div>
+    </div>
+    
+    <div className="bg-white p-6 rounded-lg shadow-sm">
+      <div className="flex items-center">
+        <div className="p-3 rounded-full" style={{ backgroundColor: '#d9b34e20' }}>
+          <Package className="text-[#d9b34e]" size={24} />
+        </div>
+        <div className="ml-4">
+          <p className="text-lg text-gray-600">Total Value</p>
+          <p className="text-2xl font-bold text-gray-900">₦{summary.totalValue.toLocaleString()}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+)}
         <div className="users-list__table-container">
           {isSearching ? (
             <div className="users-list__loading">Searching...</div>
@@ -369,14 +460,20 @@ const AdminUsersList = () => {
                     <th onClick={() => handleSort("names")}>
                       Name{renderSortIndicator("names")}
                     </th>
-                    <th onClick={() => handleSort("phoneNumber")}>
-                      Phone{renderSortIndicator("phoneNumber")}
-                    </th>
-                    <th onClick={() => handleSort("email")}>
-                      Email{renderSortIndicator("email")}
-                    </th>
                     <th onClick={() => handleSort("age")}>
                       Age{renderSortIndicator("age")}
+                    </th>
+                    <th onClick={() => handleSort("gradeLevel")}>
+                      Grade{renderSortIndicator("gradeLevel")}
+                    </th>
+                    <th onClick={() => handleSort("disability")}>
+                      Disability{renderSortIndicator("disability")}
+                    </th>
+                    <th onClick={() => handleSort("sex")}>
+                      Gender{renderSortIndicator("sex")}
+                    </th>
+                    <th onClick={() => handleSort("createdAt")}>
+                      Date registered{renderSortIndicator("createdAt")}
                     </th>
                     <th>Actions</th>
                   </tr>
@@ -386,9 +483,11 @@ const AdminUsersList = () => {
                     <tr key={user?._id}>
                       <td>{user?.userId}</td>
                       <td>{user?.names}</td>
-                      <td>{user?.phoneNumber}</td>
-                      <td>{user?.email}</td>
                       <td>{user?.age}</td>
+                      <td>{user?.gradeLevel}</td>
+                      <td>{user?.disabilityType}</td>
+                      <td>{user?.sex}</td>
+                      <td>{moment(user?.createdAt).format('MMMM D, YYYY [at] h:mm:ss A')}</td>
                       <td>
                         <div className="users-list__actions">
                           <div

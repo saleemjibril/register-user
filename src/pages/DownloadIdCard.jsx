@@ -64,13 +64,15 @@ const DownloadIdCard = () => {
       setSearchLoading(true);
       try {
         const response = await searchUser(searchTerm);
+        console.log("searchUser", response);
+        
         if (response?.status === 200) {
           setUser(response.data);
         } else {
           if (response?.data?.message) {
             alert(response?.data?.message);
           } else {
-            alert("No user found with this user id, email or phone number");
+            alert("No user found with this user id");
           }
         }
       } catch (error) {
@@ -92,7 +94,7 @@ const DownloadIdCard = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Enter user id, email or phone number"
+                placeholder="Enter user id"
                 className="id-generator__form-input"
                 disabled={searchLoading}
                 required
@@ -112,7 +114,7 @@ const DownloadIdCard = () => {
           <div className="id-display__card">
         <div className="id-display__content">
           <div className="id-display__header">
-            <h1 className="id-display__header-title">TRACTRAC</h1>
+            <h1 className="id-display__header-title">CHANAN HILL</h1>
           </div>
 
           <div className="id-display__info">

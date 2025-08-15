@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { pdf } from "@react-pdf/renderer";
 import moment from "moment";
 import QRCode from "qrcode";
-import { checkInTablet, checkOutTablet, getUser, recordAttendance, recordMeal, updateUser } from "../../apis";
+import { checkInTablet, checkOutTablet, distributePadToStudent, getUser, recordAttendance, recordMeal, updateUser } from "../../apis";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import IDCard from "../../components/IDCard";
 import fileUpload from "../../utils/fileUpload";
@@ -12,6 +12,7 @@ import MealModal from "../../components/MealModal";
 import AttendanceModal from "../../components/AttendanceModal";
 import TabChecking from "../../components/TabChecking";
 import { toast } from "react-toastify";
+import PadDistributionModal from "../../components/PadDistributionModal";
 
 const User = () => {
   const pathname = useParams();
@@ -23,6 +24,9 @@ const User = () => {
   const [loading, setLoading] = useState(false);
   const [user, setUser] = useState(null);
   const [qrCodeUrl, setQrCodeUrl] = useState("");
+  const [selectedBrand, setselectedBrand] = useState("");
+  const [selectedStorageLocation, setSelectedStorageLocation] = useState("");
+  const [padDistributionModal, setPadDistributionModal] = useState(false);
   const [imageLoading, setImageLoading] = useState(false);
   const [mealStatus, setMealStatus] = useState(null);
   const [subject, setSubject] = useState("");
@@ -70,6 +74,11 @@ const User = () => {
     }
   }, []);
   useEffect(() => {
+    // if (auth?.userInfo?.role === "attendance") {
+    showPadDistributionModal();
+    // }
+  }, []);
+  useEffect(() => {
     if (auth?.userInfo?.role === "tab-checking") {
     showTabCheckingModal();
     }
@@ -78,6 +87,9 @@ const User = () => {
   const handleGetUser = async () => {
     setLoading(true);
     const response = await getUser(pathname?.id);
+
+    console.log("getUser", response);
+    
     setImage(response?.data?.photo);
     setUser(response?.data);
     setQrCodeUrl(response?.data?.qrCodeUrl);
@@ -174,6 +186,32 @@ const User = () => {
     );
   };
 
+
+  const handleDistributePadToStudent = async () => {
+    try {
+      const response = await distributePadToStudent(
+        {
+          studentUserId: user?._id, 
+          staffId: auth?.userInfo?.id, 
+          staffName: "Saleem Jibril",
+          brandPreference: selectedBrand, 
+          storageLocation: selectedStorageLocation,
+          reason: "Daily distribution"
+          // notes 
+        }
+      )
+      toast.success(response?.data?.message)
+
+      console.log("distributePadToStudent", response);
+    } catch (error) {
+      console.error("ERROR DISTRIBUTING PADS", error)
+      toast.error(error?.response?.data?.message)
+
+    }
+    
+  }
+
+
   const todayMeals = getTodayMeals();
 
   const closeModal = () => {
@@ -212,6 +250,10 @@ const User = () => {
 
     setOpen(true);
   };
+  const showPadDistributionModal = () => {
+
+    setPadDistributionModal(true);
+  };
   const showTabCheckingModal = () => {
 
     setTabCheckingOpen(true);
@@ -244,8 +286,6 @@ const User = () => {
               <div className="id-generator__photo">
                 <div className="id-generator__photo-preview">
                   <div className="id-generator__photo-preview-container">
-                    {/* {image && ( */}
-
                     <div className="id-generator__photo-preview">
                       <div className="id-generator__photo-preview-container">
                         {!image && !loading && <div>User has no image</div>}
@@ -261,7 +301,6 @@ const User = () => {
                         </div>
                       )}
                     </div>
-                    {/* )} */}
                   </div>
                 </div>
               </div>
@@ -321,16 +360,42 @@ const User = () => {
                   <label className="id-generator__form-label">User Id</label>
                   <div className="id-generator__form-value">{user?.userId}</div>
                 </div>
+                
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">Full Name</label>
                   <div className="id-generator__form-value">{user?.names}</div>
                 </div>
 
                 <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Email</label>
-                  <div className="id-generator__form-value">{user?.email}</div>
+                  <label className="id-generator__form-label">Age</label>
+                  <div className="id-generator__form-value">{user?.age}</div>
                 </div>
 
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Sex</label>
+                  <div className="id-generator__form-value">{user?.sex}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Grade Level</label>
+                  <div className="id-generator__form-value">{user?.gradeLevel}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Disability</label>
+                  <div className="id-generator__form-value">{user?.disability}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Disability Type</label>
+                  <div className="id-generator__form-value">{user?.disabilityType}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Consent</label>
+                  <div className="id-generator__form-value">{user?.consent}</div>
+                </div>
+{/* 
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">
                     Credentials
@@ -351,170 +416,7 @@ const User = () => {
                       </button>
                     )}
                   </div>
-                </div>
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Community</label>
-                  <div className="id-generator__form-value">
-                    {user?.community}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Limited</label>
-                  <div className="id-generator__form-value">
-                    {user?.limited}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">District</label>
-                  <div className="id-generator__form-value">
-                    {user?.district}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">LGA</label>
-                  <div className="id-generator__form-value">{user?.lga}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">State</label>
-                  <div className="id-generator__form-value">{user?.state}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Phone Number
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.phoneNumber}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Age</label>
-                  <div className="id-generator__form-value">{user?.age}</div>
-                </div>
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Msp Type</label>
-                  <div className="id-generator__form-value">
-                    {user?.mspType}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Sex</label>
-                  <div className="id-generator__form-value">{user?.sex}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Operator</label>
-                  <div className="id-generator__form-value">
-                    {user?.operator}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Degree Qualifications
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.degreeQualifications}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Languages</label>
-                  <div className="id-generator__form-value">
-                    {user?.languagesSpokenAndWritten}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Disability</label>
-                  <div className="id-generator__form-value">
-                    {user?.disability}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Religion</label>
-                  <div className="id-generator__form-value">
-                    {user?.religion}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Birth Certificate
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.birthCertificateCheck}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">ID Type</label>
-                  <div className="id-generator__form-value">{user?.idType}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">ID Number</label>
-                  <div className="id-generator__form-value">
-                    {user?.idNumber}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Qualification
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.qualification}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Physical Fitness
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.physicalFitness}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Availability
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.availability}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Health Condition
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.preExistingHealthCondition}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Nursing Mother
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.nursingMother}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Remark</label>
-                  <div className="id-generator__form-value">{user?.remark}</div>
-                </div>
+                </div> */}
               </div>
             </div>
           )}
@@ -536,8 +438,6 @@ const User = () => {
               <div className="loading">Loading...</div>
             ) : (
               <>
-                {/* Existing ID card display code */}
-
                 {/* Add meal status section */}
                 <div className="meal-status">
                   <h2>Today's Meals</h2>
@@ -602,6 +502,16 @@ const User = () => {
              loading={loading}
              onViewClick={handleViewClick}
               />
+        <PadDistributionModal 
+             open={padDistributionModal}
+             onClose={handleDistributePadToStudent}
+             selectedStorageLocation={selectedStorageLocation}
+             setSelectedStorageLocation={setSelectedStorageLocation}
+             selectedBrand={selectedBrand}
+             setselectedBrand={setselectedBrand}
+             loading={loading}
+            //  onViewClick={handleViewClick}
+              />
 
         <TabChecking 
              open={tabCheckingOpen}
@@ -618,8 +528,8 @@ const User = () => {
         <div className="meal-status" id="attendance">
           <h2>Attendance</h2>
           <div className="meal-records">
-            {user?.attendance?.map((item) => (
-              <div className="meal-record">
+            {(user?.attendance || []).map((item, index) => (
+              <div key={index} className="meal-record">
                 <span>
                   {moment(item?.date).format("MMMM Do YYYY")} -{" "}
                   {item?.subject}
@@ -629,11 +539,11 @@ const User = () => {
             ))}
           </div>
         </div>
-        <div className="meal-status" id="attendance">
+        <div className="meal-status" id="tab-checking">
           <h2>Tab Checking In/Out</h2>
           <div className="meal-records">
-            {[...user?.tabChecking]?.reverse()?.map((item) => (
-              <div className="meal-record">
+            {(user?.tabChecking || []).reverse().map((item, index) => (
+              <div key={index} className="meal-record">
                 <span>
                   {moment(item?.timeStamp).format("MMMM Do YYYY, h:mm A")} -{" "}
                   {item?.checkType}

@@ -29,8 +29,6 @@ const PhotoUploadForm = () => {
     }
   }, [])
 
-
-
   const handleSearch = async (e) => {
     e.preventDefault();
     if (!searchTerm) return;
@@ -39,8 +37,6 @@ const PhotoUploadForm = () => {
     try {
       const response = await searchUser(searchTerm);
       if (response?.status === 200) {
-        
-
         setUser(response?.data);
         setFileName(response?.data?.credentials?.name);
         setImage(response?.data?.photo || "");
@@ -48,7 +44,7 @@ const PhotoUploadForm = () => {
         if (response?.data?.message) {
           alert(response?.data?.message);
         } else {
-          alert("No user found with this user id, email or phone number");
+          alert("No user found with this user id");
         }
       }
     } catch (error) {
@@ -74,10 +70,9 @@ const PhotoUploadForm = () => {
         }
       });
 
-
       if (response?.status === 200) {
         alert("Details updated successfully")
-        navigate(`/admin/view-user/${user?._id}`);
+        // navigate(`/admin/view-user/${user?._id}`);
       } else {
         alert("image upload failed");
       }
@@ -90,7 +85,6 @@ const PhotoUploadForm = () => {
     }
   };
 
-
   return (
     <AdminLayout>
       <div className="id-generator">
@@ -98,7 +92,7 @@ const PhotoUploadForm = () => {
           <div className="id-generator__header">
             <h2 className="id-generator__header-title">Upload Image & Credentials</h2>
             <p className="id-generator__header-subtitle">
-              Search for a user to upload their image & credentials
+              Search for a student to upload their image & credentials
             </p>
           </div>
 
@@ -108,7 +102,7 @@ const PhotoUploadForm = () => {
                 type="text"
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                placeholder="Enter user id, email or phone number"
+                placeholder="Enter user id"
                 className="id-generator__form-input"
                 disabled={searchLoading}
                 required
@@ -201,7 +195,6 @@ const PhotoUploadForm = () => {
               <input
                 type="text"
                 value={fileName}
-                // onChange={(e) => setSearchTerm(e.target.value)}
                 placeholder="File name"
                 className="id-generator__form-input"
                 disabled
@@ -241,63 +234,10 @@ const PhotoUploadForm = () => {
                   <label className="id-generator__form-label">User ID</label>
                   <div className="id-generator__form-value">{user?.userId}</div>
                 </div>
+                
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">Full Name</label>
                   <div className="id-generator__form-value">{user?.names}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Email</label>
-                  <div className="id-generator__form-value">{user?.email}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Credentials</label>
-                  <div className="id-generator__form-value">
-                  {user?.credentials?.url && <button className="id-generator__actions-register"
-                  onClick={() => window.open(user?.credentials?.url, '_blank', 'noopener,noreferrer')}
-                  >View credentials</button>}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Community</label>
-                  <div className="id-generator__form-value">
-                    {user?.community}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Limited</label>
-                  <div className="id-generator__form-value">
-                    {user?.limited}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">District</label>
-                  <div className="id-generator__form-value">
-                    {user?.district}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">LGA</label>
-                  <div className="id-generator__form-value">{user?.lga}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">State</label>
-                  <div className="id-generator__form-value">{user?.state}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Phone Number
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.phoneNumber}
-                  </div>
                 </div>
 
                 <div className="id-generator__form-info">
@@ -311,105 +251,33 @@ const PhotoUploadForm = () => {
                 </div>
 
                 <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Degree Qualifications
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.degreeQualifications}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Languages</label>
-                  <div className="id-generator__form-value">
-                    {user?.languagesSpokenAndWritten}
-                  </div>
+                  <label className="id-generator__form-label">Grade Level</label>
+                  <div className="id-generator__form-value">{user?.gradeLevel}</div>
                 </div>
 
                 <div className="id-generator__form-info">
                   <label className="id-generator__form-label">Disability</label>
+                  <div className="id-generator__form-value">{user?.disability}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Disability Type</label>
+                  <div className="id-generator__form-value">{user?.disabilityType}</div>
+                </div>
+
+                <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Consent</label>
+                  <div className="id-generator__form-value">{user?.consent}</div>
+                </div>
+
+                {/* <div className="id-generator__form-info">
+                  <label className="id-generator__form-label">Credentials</label>
                   <div className="id-generator__form-value">
-                    {user?.disability}
+                  {user?.credentials?.url && <button className="id-generator__actions-register"
+                  onClick={() => window.open(user?.credentials?.url, '_blank', 'noopener,noreferrer')}
+                  >View credentials</button>}
                   </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Religion</label>
-                  <div className="id-generator__form-value">
-                    {user?.religion}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Birth Certificate
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.birthCertificateCheck}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">ID Type</label>
-                  <div className="id-generator__form-value">{user?.idType}</div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">ID Number</label>
-                  <div className="id-generator__form-value">
-                    {user?.idNumber}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Qualification
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.qualification}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Physical Fitness
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.physicalFitness}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Availability
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.availability}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Health Condition
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.preExistingHealthCondition}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">
-                    Nursing Mother
-                  </label>
-                  <div className="id-generator__form-value">
-                    {user?.nursingMother}
-                  </div>
-                </div>
-
-                <div className="id-generator__form-info">
-                  <label className="id-generator__form-label">Remark</label>
-                  <div className="id-generator__form-value">{user?.remark}</div>
-                </div>
+                </div> */}
               </div>
             </div>
           )}
